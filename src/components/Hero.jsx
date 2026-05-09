@@ -7,7 +7,7 @@ import { Card } from "./ui/Card"
 import DashboardPreview from "./DashboardPreview"
 import { cn } from "@/lib/utils"
 import { TrendingUp, Activity, Calendar, Target } from "lucide-react"
-import { playfair } from "./ui/Fonts"
+import Link from "next/link"
 
 export default function Hero() {
   return (
@@ -33,9 +33,11 @@ export default function Hero() {
             calculators.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-            <Button size="lg" className="w-full sm:w-auto">
-              Get Started
-            </Button>
+            <Link href = "/login">
+              <Button size="lg" className="w-full sm:w-auto">
+                Get Started
+              </Button>
+            </Link>
           </div>
         </motion.div>
 

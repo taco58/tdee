@@ -1,4 +1,4 @@
-import { Geist, Outfit} from "next/font/google";
+import { Geist, Outfit, Jost} from "next/font/google";
 
 export const geist = Geist({
   subsets: ["latin"],
@@ -10,4 +10,10 @@ export const outfit = Outfit({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
   variable: "--font-outfit",
+});
+
+export const jost = Jost({
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "900"],
+  variable: "--font-jost",
 });

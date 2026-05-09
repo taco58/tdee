@@ -6,7 +6,7 @@ import { Card } from "./ui/Card"
 
 export default function DashboardPreview() {
   return (
-    <section id="dashboard" className="py-24 px-6 overflow-hidden bg-[#242424]">
+    <section className="py-24 px-6 overflow-hidden bg-[#242424]">
       {/* Full-width background glow */}
       <div className="absolute inset-0 flex justify-center pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-[600px] bg-orange-600/5 blur-[50px] rounded-full" />

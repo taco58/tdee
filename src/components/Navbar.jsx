@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/Button';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -23,10 +25,9 @@ export default function Navbar() {
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center font-bold text-white italic">A</div>
-          <span className="text-xl font-bold tracking-tight text-white">Adaptive TDEE</span>
-        </div>
+        <button onClick = {() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="cursor-pointer flex items-center gap-2">
+          <Image src = "/logo.png" alt = "logo" width={100} height={100} className="rounded-full"/>
+        </button>
         
         {/* <div className="hidden md:flex items-center gap-8">
           <a href="#features" className="text-sm text-white/60 hover:text-white transition-colors">Features</a>
@@ -35,8 +36,10 @@ export default function Navbar() {
         </div> */}
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" className="hidden sm:inline-flex">Log In</Button>
-          <Button size="sm">Get Started</Button>
+          <Link href = "/login">
+            <Button variant="ghost" size="sm">Log In</Button>
+          </Link>
+          {/* <Button size="sm" className="hidden sm:inline-flex">Get Started</Button> */}
         </div>
       </div>
     </nav>
