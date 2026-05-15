@@ -26,7 +26,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <button onClick = {() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="cursor-pointer flex items-center gap-2">
-          <Image src = "/logo.png" alt = "logo" width={100} height={100} className="rounded-full"/>
+          <Image src = "/logo.png" alt = "logo" width={100} height={100} className="rounded-full width-auto"/>
         </button>
         
         {/* <div className="hidden md:flex items-center gap-8">
@@ -39,7 +39,9 @@ export default function Navbar() {
           <Link href = "/login">
             <Button variant="ghost" size="sm">Log In</Button>
           </Link>
-          {/* <Button size="sm" className="hidden sm:inline-flex">Get Started</Button> */}
+          <Link href = "/signup">
+            <Button size="sm">Get Started</Button>
+          </Link>
         </div>
       </div>
     </nav>

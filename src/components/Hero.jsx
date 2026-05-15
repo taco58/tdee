@@ -13,7 +13,7 @@ export default function Hero() {
   return (
     <section className="relative pt-32 pb-10 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 text-center">
-        <div className="h-150 absolute pointer-events-none inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:linear-gradient(to_top,transparent,black_40%,black_80%,transparent)]" />
+        <div className="h-150 absolute pointer-events-none inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:linear-gradient(to_top,transparent,black_40%,black_90%,transparent)]" />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -33,7 +33,7 @@ export default function Hero() {
             calculators.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-            <Link href = "/login">
+            <Link href = "/signup">
               <Button size="lg" className="w-full sm:w-auto">
                 Get Started
               </Button>

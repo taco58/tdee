@@ -33,7 +33,7 @@ export default function Features() {
   return (
     <section id="features" className="relative overflow-hidden">
       <div
-        className="absolute pointer-events-none inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:linear-gradient(to_bottom,transparent,black_40%,black_80%,transparent)]"
+        className="absolute pointer-events-none inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_80%,transparent)]"
       />
       <div className="relative z-10 max-w-7xl mx-auto py-15 px-6">
         <div className="text-center mb-16">
