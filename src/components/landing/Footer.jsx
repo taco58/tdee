@@ -10,7 +10,6 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16 text-left">
           
-          {/* Left Column: Logo + description */}
           <div className="md:col-span-5">
             <Link href="/" className="cursor-pointer flex items-center mb-4 select-none">
               <Image 
@@ -31,7 +30,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Middle Column: Links */}
           <div className="md:col-span-3">
             <h4 className="text-xs uppercase tracking-[0.15em] font-semibold text-white/40 mb-4">Nav</h4>
             <ul className="flex flex-col gap-3 text-sm text-white/60">
@@ -42,7 +40,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Right Column: nSuns */}
           <div className="md:col-span-4">
             <h4 className="text-xs uppercase tracking-[0.15em] font-semibold text-white/40 mb-4">Info</h4>
             <p className="text-sm text-white/50 leading-relaxed mb-3">
@@ -54,7 +51,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="h-px bg-white/5 w-full mb-8" />
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/30">
@@ -68,3 +64,4 @@ export default function Footer() {
     </footer>
   )
 }
+

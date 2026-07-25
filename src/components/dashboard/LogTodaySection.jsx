@@ -38,7 +38,6 @@ export default function LogTodaySection({
                   step="0.1"
                   value={inputWeight}
                   onChange={(e) => setInputWeight(e.target.value)}
-                  placeholder={weightUnit === "kg" ? "75.0" : "150.6"}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white font-bold text-lg focus:border-[#F97316] focus:outline-none transition-colors"
                 />
               </div>
@@ -50,7 +49,6 @@ export default function LogTodaySection({
                   type="number"
                   value={inputCalories}
                   onChange={(e) => setInputCalories(e.target.value)}
-                  placeholder="2053"
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white font-bold text-lg focus:border-[#F97316] focus:outline-none transition-colors"
                 />
               </div>
@@ -149,7 +147,6 @@ export default function LogTodaySection({
                   </button>
                 </div>
 
-                {/* Form */}
                 <form onSubmit={onSaveTodayLog} className="space-y-4">
                   <div>
                     <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-1">
@@ -160,7 +157,6 @@ export default function LogTodaySection({
                       step="0.1"
                       value={inputWeight}
                       onChange={(e) => setInputWeight(e.target.value)}
-                      placeholder="150.6"
                       className="w-full bg-white/5 border border-white/15 rounded-xl p-4 text-white text-2xl font-bold focus:border-orange-500 focus:outline-none transition-colors"
                     />
                   </div>
@@ -173,14 +169,9 @@ export default function LogTodaySection({
                       type="number"
                       value={inputCalories}
                       onChange={(e) => setInputCalories(e.target.value)}
-                      placeholder="2053"
                       className="w-full bg-white/5 border border-white/15 rounded-xl p-4 text-white text-2xl font-bold focus:border-orange-500 focus:outline-none transition-colors"
                     />
                   </div>
-
-                  <p className="text-xs text-zinc-400 italic font-mono">
-                    Yesterday: 150.6 lb · 2,053 kcal
-                  </p>
 
                   <button
                     type="submit"

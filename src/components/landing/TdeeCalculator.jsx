@@ -9,13 +9,13 @@ import Link from 'next/link';
 
 export default function TdeeCalculator() {
   const [gender, setGender] = useState('male');
-  const [unit, setUnit] = useState('imperial'); // imperial or metric
+  const [unit, setUnit] = useState('imperial');
   const [age, setAge] = useState(25);
-  const [weight, setWeight] = useState(165); // lbs or kg
+  const [weight, setWeight] = useState(165);
   const [heightFt, setHeightFt] = useState(5);
   const [heightIn, setHeightIn] = useState(9);
   const [heightCm, setHeightCm] = useState(175);
-  const [activity, setActivity] = useState(1.375); // activity multiplier
+  const [activity, setActivity] = useState(1.375);
 
   const [tdee, setTdee] = useState(2400);
   const [bmr, setBmr] = useState(1700);
@@ -28,7 +28,6 @@ export default function TdeeCalculator() {
     { value: 1.9, label: 'Extra Active', desc: 'Physical job or elite athlete' }
   ];
 
-  // Recalculate BMR and TDEE
   useEffect(() => {
     let wKg = unit === 'imperial' ? weight * 0.45359237 : weight;
     let hCm = heightCm;
@@ -39,7 +38,6 @@ export default function TdeeCalculator() {
 
     if (wKg <= 0 || hCm <= 0 || age <= 0) return;
 
-    // Mifflin-St Jeor Equation
     let bmrVal = 0;
     if (gender === 'male') {
       bmrVal = 10 * wKg + 6.25 * hCm - 5 * age + 5;
@@ -66,10 +64,8 @@ export default function TdeeCalculator() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          {/* Inputs Column */}
           <div className="lg:col-span-7 flex flex-col justify-between">
             <Card className="p-6 md:p-8 flex-1 flex flex-col justify-between gap-6 bg-[#111111] border-white/5">
-              {/* Unit and Gender Selection */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs uppercase tracking-wider text-white/40 font-bold mb-2">Gender</label>
@@ -122,7 +118,6 @@ export default function TdeeCalculator() {
                 </div>
               </div>
 
-              {/* Age and Weight Inputs */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs uppercase tracking-wider text-white/40 font-bold mb-2">Age (Years)</label>
@@ -147,7 +142,6 @@ export default function TdeeCalculator() {
                 </div>
               </div>
 
-              {/* Height Input (Conditional on Unit) */}
               <div>
                 <label className="block text-xs uppercase tracking-wider text-white/40 font-bold mb-2">Height</label>
                 {unit === 'imperial' ? (
@@ -184,7 +178,6 @@ export default function TdeeCalculator() {
                 )}
               </div>
 
-              {/* Activity Level Selector */}
               <div>
                 <label className="block text-xs uppercase tracking-wider text-white/40 font-bold mb-2">Activity Level</label>
                 <div className="flex flex-col gap-2">
@@ -210,9 +203,7 @@ export default function TdeeCalculator() {
             </Card>
           </div>
 
-          {/* Results Column */}
           <div className="lg:col-span-5 flex flex-col gap-6">
-            {/* TDEE Card */}
             <Card className="p-8 bg-[#111111] border-white/5 flex flex-col items-center justify-center text-center relative overflow-hidden">
               <div className="p-3 bg-orange-600/10 rounded-full border border-orange-500/20 text-orange-500 mb-6">
                 <Flame className="w-8 h-8" />
@@ -227,7 +218,6 @@ export default function TdeeCalculator() {
                 Your estimated Daily Maintenance calories based on standard metabolic formulas.
               </p>
 
-              {/* BMR Stat */}
               <div className="w-full pt-4 border-t border-white/5 flex justify-between items-center text-sm px-4">
                 <span className="text-white/40 flex items-center gap-1.5">
                   <Activity className="w-4 h-4" /> BMR (Basal Metabolic Rate)
@@ -236,7 +226,6 @@ export default function TdeeCalculator() {
               </div>
             </Card>
 
-            {/* Target Breakdown Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card className="p-4 bg-[#111111] border-white/5 flex flex-col justify-between">
                 <div>
@@ -263,7 +252,6 @@ export default function TdeeCalculator() {
               </Card>
             </div>
 
-            {/* Adaptive Difference Callout */}
             <Card className="p-5 bg-[#111111]/70 border-white/5 flex items-start gap-4">
               <div className="p-2 bg-orange-600/10 rounded-lg text-orange-500 shrink-0">
                 <Target className="w-5 h-5" />
@@ -286,3 +274,4 @@ export default function TdeeCalculator() {
     </section>
   );
 }
+

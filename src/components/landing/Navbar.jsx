@@ -38,9 +38,7 @@ export default function Navbar() {
               : "bg-black/40 backdrop-blur-sm"
           )}
         >
-          {/* Desktop Layout */}
           <div className="hidden md:grid grid-cols-3 items-center w-full">
-            {/* Column 1: Logo */}
             <div className="flex items-center justify-start">
               <Link href="/" className="cursor-pointer flex items-center select-none">
                 <Image 
@@ -53,7 +51,6 @@ export default function Navbar() {
               </Link>
             </div>
             
-            {/* Column 2: Navigation Links with Fluid Hover Sliding Pill */}
             <div 
               className="flex items-center justify-center gap-1 relative py-1"
               onMouseLeave={() => setHoveredLink(null)}
@@ -82,7 +79,6 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* Column 3: Action Buttons */}
             <div className="flex items-center justify-end gap-3">
               <Link href="/login">
                 <Button variant="ghost" size="sm" className="rounded-full border-transparent bg-transparent hover:bg-white/5 text-white/80 hover:text-white shadow-none text-[10px] uppercase tracking-[0.1em] px-4 py-1.5 transition-colors">
@@ -97,7 +93,6 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile Layout */}
           <div className="flex md:hidden items-center justify-between w-full">
             <Link href="/" className="cursor-pointer flex items-center select-none">
               <Image 
@@ -126,7 +121,6 @@ export default function Navbar() {
         </nav>
       </div>
 
-      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div 
@@ -167,3 +161,4 @@ export default function Navbar() {
     </>
   );
 }
+

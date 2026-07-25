@@ -5,14 +5,30 @@ import { motion } from 'framer-motion';
 import DashboardPreview from './DashboardPreview';
 import { Button } from '../ui/Button';
 import Link from 'next/link';
+import DotField from './DotField';
 
 export default function SplitSections() {
   return (
-    <div id="science" className="bg-[#0A0A0F]">
-      {/* Split A: Text Left, Visual Right */}
-      <section className="relative py-28 px-6 border-t border-white/5">
+    <div id="science" className="relative z-10 overflow-hidden bg-[#0A0A0F]">
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-80">
+        <DotField
+          dotRadius={1.5}
+          dotSpacing={16}
+          bulgeStrength={70}
+          glowRadius={200}
+          sparkle={false}
+          waveAmplitude={0}
+          cursorRadius={400}
+          cursorForce={0.15}
+          bulgeOnly
+          gradientFrom="rgba(249, 115, 22, 0.45)"
+          gradientTo="rgba(234, 88, 12, 0.2)"
+          glowColor="#F97316"
+        />
+      </div>
+
+      <section className="relative z-10 py-28 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          {/* Left Text Column */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -34,7 +50,6 @@ export default function SplitSections() {
             </a>
           </motion.div>
 
-          {/* Right Visual Column (Phone Mockup) */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -47,10 +62,9 @@ export default function SplitSections() {
         </div>
       </section>
 
-      {/* Split B: Visual Left, Text Right */}
       <section className="relative py-28 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          {/* Left Visual Column (Formula Box) */}
+
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -69,7 +83,6 @@ export default function SplitSections() {
             </div>
           </motion.div>
 
-          {/* Right Text Column */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -97,3 +110,4 @@ export default function SplitSections() {
     </div>
   );
 }
+

@@ -16,14 +16,10 @@ export default async function CheckEmailPage() {
     <main
       className={`min-h-screen bg-[#0A0A0F] text-white flex items-center justify-center p-6 ${dmSans.className}`}
     >
-      {/* Background radial glow */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[500px] max-h-[500px] bg-      
-  [#F97316]/5 rounded-full blur-[100px] pointer-events-none"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[500px] max-h-[500px] bg-[#F97316]/5 rounded-full blur-[100px] pointer-events-none"
       />
-      {/*  */}
       <div className="w-full max-w-sm flex flex-col items-center gap-8 relative z-10 text-center">
-        {/* Logo */}
         <Link href="/">
           <Image
             src="/logo.png"
@@ -34,7 +30,6 @@ export default async function CheckEmailPage() {
           />
         </Link>
 
-        {/* Card */}
         <div className="bg-[#0D0D0D] border border-white/5 rounded-2xl p-8 w-full">
           <p className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-2">
             REGISTRATION
@@ -61,3 +56,4 @@ export default async function CheckEmailPage() {
     </main>
   )
 }
+

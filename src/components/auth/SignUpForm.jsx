@@ -33,7 +33,6 @@ export function SignupForm({ className, ...props }) {
     <div className={cn("flex flex-col gap-6 w-full font-light", className)} {...props}>
       <div className="bg-[#0D0D0D] border border-white/5 rounded-2xl p-6 md:p-8 w-full text-left">
         
-        {/* Eyebrow & Editorial Title */}
         <div className="mb-8">
           <p className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-2">
             REGISTER
@@ -46,7 +45,6 @@ export function SignupForm({ className, ...props }) {
           </p>
         </div>
 
-        {/* Error Alert Box */}
         {displayError && (
           <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-xs text-red-400 font-medium">
             {displayError}
@@ -55,7 +53,6 @@ export function SignupForm({ className, ...props }) {
 
         <form action={formAction} onSubmit={handleSubmit}>
           <div className="flex flex-col gap-5">
-            {/* Email Field */}
             <div className="flex flex-col">
               <label htmlFor="email" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold mb-2">
                 Email Address
@@ -70,7 +67,6 @@ export function SignupForm({ className, ...props }) {
               />
             </div>
 
-            {/* Password Fields */}
             <div className="grid grid-cols-1 gap-4">
               <div className="flex flex-col">
                 <label htmlFor="password" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold mb-2">
@@ -107,7 +103,6 @@ export function SignupForm({ className, ...props }) {
               Must be at least 8 characters long.
             </p>
 
-            {/* Submit Button */}
             <div className="flex flex-col gap-3 mt-2">
               <Button type="submit" disabled={isPending} className="disabled:opacity-50 w-full rounded-full bg-[#F97316] hover:bg-[#EA580C] text-white border-transparent py-2.5 text-[10px] uppercase tracking-[0.15em] font-bold shadow-none transition-colors">
                 {isPending ? "Creating account..." : "Create Account"}
@@ -123,7 +118,6 @@ export function SignupForm({ className, ...props }) {
         </form>
       </div>
 
-      {/* Sub Footer Agreement */}
       <p className="px-6 text-center text-[10px] text-white/35 leading-relaxed">
         By clicking continue, you agree to our{" "}
         <a href="#" className="hover:text-white transition-colors underline">Terms of Service</a>{" "}
@@ -133,3 +127,4 @@ export function SignupForm({ className, ...props }) {
     </div>
   )
 }
+

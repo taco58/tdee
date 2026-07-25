@@ -13,7 +13,6 @@ import {
   ReferenceLine,
 } from "recharts"
 
-// Custom High-Contrast Tooltip
 const CustomTdeeTooltip = ({ active, payload, label, formulaEstimate }) => {
   if (active && payload && payload.length) {
     const tdeeVal = payload[0]?.value
@@ -58,7 +57,6 @@ export default function TdeeTrendChart({ tdeeData, formulaEstimate = 2050, weeks
       transition={{ duration: 0.4, delay: 0.1 }}
       className="bg-[#0D0D0D] border border-white/5 rounded-2xl p-5 md:p-6 shadow-xl"
     >
-      {/* Header with Title & Legend */}
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-sm font-bold text-white tracking-tight">
@@ -67,7 +65,6 @@ export default function TdeeTrendChart({ tdeeData, formulaEstimate = 2050, weeks
           <p className="text-[11px] text-zinc-500">Weekly adapted expenditure vs formula</p>
         </div>
 
-        {/* Legend */}
         <div className="flex items-center gap-3 text-[10px] font-medium text-zinc-500">
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-[2px] bg-zinc-500 rounded-full" style={{ borderTop: '1px dashed #71717a' }} />
@@ -87,7 +84,6 @@ export default function TdeeTrendChart({ tdeeData, formulaEstimate = 2050, weeks
               data={tdeeData}
               margin={{ top: 10, right: 15, left: 15, bottom: 10 }}
             >
-              {/* Subtle Horizontal Gridlines */}
               <CartesianGrid
                 stroke="rgba(255,255,255,0.06)"
                 vertical={false}
@@ -114,7 +110,6 @@ export default function TdeeTrendChart({ tdeeData, formulaEstimate = 2050, weeks
                 content={<CustomTdeeTooltip formulaEstimate={formulaEstimate} />}
               />
 
-              {/* Formula Reference Line */}
               <ReferenceLine
                 y={formulaEstimate}
                 stroke="rgba(255,255,255,0.3)"
@@ -127,7 +122,6 @@ export default function TdeeTrendChart({ tdeeData, formulaEstimate = 2050, weeks
                 }}
               />
 
-              {/* TDEE Line with Visible Nodes */}
               <Line
                 type="monotone"
                 dataKey="tdee"
@@ -158,3 +152,4 @@ export default function TdeeTrendChart({ tdeeData, formulaEstimate = 2050, weeks
     </motion.div>
   )
 }
+

@@ -13,7 +13,6 @@ export default async function DashboardPage() {
     console.log("Dashboard data fetch note:", err?.message)
   }
 
-  // Calculate real TDEE metrics and chart arrays from tdee.ts
   const adaptiveStats = await calculateAdaptiveTDEE(logs, profile)
 
   return (
@@ -24,3 +23,4 @@ export default async function DashboardPage() {
     />
   )
 }
+

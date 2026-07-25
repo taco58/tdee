@@ -8,15 +8,12 @@ import {
   Clock,
 } from "lucide-react"
 
-// Helper: get number of days in a month
 function getDaysInMonth(year, month) {
   return new Date(year, month + 1, 0).getDate()
 }
 
-// Helper: get day of week for the 1st (0=Sun, shift to Mon start)
 function getStartDayOfWeek(year, month) {
   const day = new Date(year, month, 1).getDay()
-  // Convert from Sunday=0 to Monday=0
   return day === 0 ? 6 : day - 1
 }
 
@@ -28,7 +25,7 @@ const MONTH_NAMES = [
 const WEEKDAY_LABELS = ["M", "T", "W", "T", "F", "S", "S"]
 
 export default function LogHistoryCalendar({
-  calendarDays,
+  calendarDays = [],
   selectedCalendarDay,
   onSelectDay,
   editDayWeight,
@@ -39,17 +36,14 @@ export default function LogHistoryCalendar({
   onCancelEntry,
   weightUnit = "lbs",
 }) {
-  // Current displayed month — start at July 2026 (our mock data month)
-  const [viewYear, setViewYear] = useState(2026)
-  const [viewMonth, setViewMonth] = useState(6) // 0-indexed: 6 = July
-
-  // Today's date for comparison
   const today = useMemo(() => new Date(), [])
   const todayYear = today.getFullYear()
   const todayMonth = today.getMonth()
   const todayDate = today.getDate()
 
-  // Compute the grid for the currently viewed month
+  const [viewYear, setViewYear] = useState(todayYear)
+  const [viewMonth, setViewMonth] = useState(todayMonth)
+
   const { daysInMonth, startOffset } = useMemo(() => {
     return {
       daysInMonth: getDaysInMonth(viewYear, viewMonth),
@@ -57,7 +51,13 @@ export default function LogHistoryCalendar({
     }
   }, [viewYear, viewMonth])
 
-  // Navigate months
+  const canGoNext = useMemo(() => {
+    return (
+      viewYear < todayYear ||
+      (viewYear === todayYear && viewMonth < todayMonth)
+    )
+  }, [viewYear, viewMonth, todayYear, todayMonth])
+
   const goToPrevMonth = () => {
     if (viewMonth === 0) {
       setViewMonth(11)
@@ -69,6 +69,7 @@ export default function LogHistoryCalendar({
   }
 
   const goToNextMonth = () => {
+    if (!canGoNext) return
     if (viewMonth === 11) {
       setViewMonth(0)
       setViewYear((y) => y + 1)
@@ -78,41 +79,45 @@ export default function LogHistoryCalendar({
     onCancelEntry()
   }
 
-  // Whether we're viewing the mock data month (July 2026)
-  const isDataMonth = viewYear === 2026 && viewMonth === 6
-
-  // Build day objects for the current view
   const viewDays = useMemo(() => {
     const days = []
+    const todayMidnight = new Date(todayYear, todayMonth, todayDate)
+
     for (let i = 1; i <= daysInMonth; i++) {
-      // Only show data for July 2026 (our mock month)
-      const matchingDay = isDataMonth
-        ? calendarDays.find((d) => d.dayNumber === i)
-        : null
+      const monthStr = String(viewMonth + 1).padStart(2, "0")
+      const dayStr = String(i).padStart(2, "0")
+      const dateStr = `${viewYear}-${monthStr}-${dayStr}`
+
+      const matchingDay = (calendarDays || []).find(
+        (d) => d.dateStr === dateStr || d.date === dateStr
+      )
 
       const isToday =
         viewYear === todayYear && viewMonth === todayMonth && i === todayDate
-      const isFuture =
-        new Date(viewYear, viewMonth, i) > today
+
+      const cellDate = new Date(viewYear, viewMonth, i)
+      const isFuture = cellDate > todayMidnight
+
+      const isLogged = matchingDay
+        ? matchingDay.isLogged !== undefined
+          ? matchingDay.isLogged
+          : matchingDay.weight != null || matchingDay.calories != null
+        : false
 
       days.push({
         dayNumber: i,
-        isLogged: matchingDay?.isLogged || false,
+        dateStr,
+        isLogged,
         isToday,
         isFuture,
-        weight: matchingDay?.weight || null,
-        calories: matchingDay?.calories || null,
+        weight: matchingDay?.weight ?? null,
+        calories: matchingDay?.calories ?? null,
       })
     }
     return days
-  }, [daysInMonth, isDataMonth, calendarDays, viewYear, viewMonth, todayYear, todayMonth, todayDate, today])
+  }, [daysInMonth, calendarDays, viewYear, viewMonth, todayYear, todayMonth, todayDate])
 
-  // Logged count for this month
   const loggedCount = viewDays.filter((d) => d.isLogged).length
-
-  // Can we go forward past the current month?
-  const canGoNext = viewYear < todayYear || (viewYear === todayYear && viewMonth < todayMonth) ||
-    (viewYear === 2026 && viewMonth <= 6) // Allow viewing up to our data month
 
   return (
     <motion.div
@@ -123,9 +128,7 @@ export default function LogHistoryCalendar({
       className="bg-[#0D0D0D] border border-white/5 rounded-2xl p-5 md:p-6 shadow-xl"
     >
       <div>
-        {/* Calendar Grid */}
         <div className="flex-1 min-w-0">
-          {/* Month Header Row — matches Dribbble reference layout */}
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-baseline gap-2">
               <h3 className="text-lg font-bold text-white tracking-tight">
@@ -145,14 +148,18 @@ export default function LogHistoryCalendar({
               </button>
               <button
                 onClick={goToNextMonth}
-                className="w-7 h-7 flex items-center justify-center text-zinc-500 hover:text-white transition-colors rounded-lg hover:bg-white/5 cursor-pointer"
+                disabled={!canGoNext}
+                className={`w-7 h-7 flex items-center justify-center transition-colors rounded-lg ${
+                  canGoNext
+                    ? "text-zinc-500 hover:text-white hover:bg-white/5 cursor-pointer"
+                    : "text-zinc-700 cursor-not-allowed opacity-40"
+                }`}
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          {/* Weekday Headers — single letter, Monday start */}
           <div className="grid grid-cols-7 mb-1">
             {WEEKDAY_LABELS.map((day, i) => (
               <div
@@ -164,7 +171,6 @@ export default function LogHistoryCalendar({
             ))}
           </div>
 
-          {/* Day Cells Grid */}
           <AnimatePresence mode="wait">
             <motion.div
               key={`${viewYear}-${viewMonth}`}
@@ -174,15 +180,17 @@ export default function LogHistoryCalendar({
               transition={{ duration: 0.2 }}
               className="grid grid-cols-7"
             >
-              {/* Empty offset cells for first week alignment */}
               {Array.from({ length: startOffset }).map((_, i) => (
                 <div key={`offset-${i}`} className="aspect-square" />
               ))}
 
               {viewDays.map((day) => {
                 const isSelected =
-                  selectedCalendarDay?.dayNumber === day.dayNumber &&
-                  isDataMonth
+                  selectedCalendarDay?.dateStr === day.dateStr ||
+                  (selectedCalendarDay?.dayNumber === day.dayNumber &&
+                    !selectedCalendarDay?.dateStr &&
+                    viewYear === todayYear &&
+                    viewMonth === todayMonth)
 
                 return (
                   <button
@@ -212,7 +220,6 @@ export default function LogHistoryCalendar({
             </motion.div>
           </AnimatePresence>
 
-          {/* Bottom stats row */}
           {loggedCount > 0 && (
             <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/5">
               <div className="flex items-center gap-3">
@@ -234,7 +241,7 @@ export default function LogHistoryCalendar({
       </div>
 
       <AnimatePresence>
-        {selectedCalendarDay && isDataMonth && (
+        {selectedCalendarDay && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -246,7 +253,12 @@ export default function LogHistoryCalendar({
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-bold text-white flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-orange-400" />
-                  {MONTH_NAMES[viewMonth].slice(0, 3)} {selectedCalendarDay.dayNumber}, {viewYear}
+                  {selectedCalendarDay.dateStr
+                    ? (() => {
+                        const [y, m, d] = selectedCalendarDay.dateStr.split("-").map(Number)
+                        return `${MONTH_NAMES[m - 1].slice(0, 3)} ${d}, ${y}`
+                      })()
+                    : `${MONTH_NAMES[viewMonth].slice(0, 3)} ${selectedCalendarDay.dayNumber}, ${viewYear}`}
                 </span>
                 <span
                   className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
@@ -306,3 +318,5 @@ export default function LogHistoryCalendar({
     </motion.div>
   )
 }
+
+

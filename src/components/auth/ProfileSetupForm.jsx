@@ -37,7 +37,6 @@ export default function ProfileSetupForm({ onSubmitSuccess }) {
         activityLevel,
       }
 
-      console.log("Submitting Profile Data:", payload)
       await new Promise((resolve) => setTimeout(resolve, 1000))
       
       setMessage("Profile saved successfully!")
@@ -53,7 +52,6 @@ export default function ProfileSetupForm({ onSubmitSuccess }) {
 
   return (
     <div className="w-full max-w-xl mx-auto bg-[#0D0D0D] border border-white/5 rounded-2xl p-6 md:p-8 font-light text-left relative z-10">
-      {/* Editorial Header */}
       <div className="mb-8">
         <p className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-2">
           BASELINE METRICS
@@ -66,7 +64,6 @@ export default function ProfileSetupForm({ onSubmitSuccess }) {
         </p>
       </div>
 
-      {/* Info/Success message */}
       {message && (
         <div className={`mb-6 p-3 rounded-xl text-xs font-medium border ${
           message.includes("successfully") 
@@ -79,7 +76,6 @@ export default function ProfileSetupForm({ onSubmitSuccess }) {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         
-        {/* Row 1: Name & Age */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="flex flex-col">
             <label htmlFor="firstName" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold mb-2">
@@ -114,7 +110,6 @@ export default function ProfileSetupForm({ onSubmitSuccess }) {
           </div>
         </div>
 
-        {/* Row 2: Weight & Weight Units */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
           <div className="flex flex-col">
             <label htmlFor="weight" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold mb-2">
@@ -171,7 +166,6 @@ export default function ProfileSetupForm({ onSubmitSuccess }) {
           </div>
         </div>
 
-        {/* Row 3: Height (cm) & Biological Gender */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
           <div className="flex flex-col">
             <label htmlFor="height" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold mb-2">
@@ -216,7 +210,6 @@ export default function ProfileSetupForm({ onSubmitSuccess }) {
           </div>
         </div>
 
-        {/* Row 4: Activity Level */}
         <div className="flex flex-col">
           <label htmlFor="activityLevel" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold mb-2">
             Weekly Activity Level
@@ -241,7 +234,6 @@ export default function ProfileSetupForm({ onSubmitSuccess }) {
           </select>
         </div>
 
-        {/* Submit */}
         <Button 
           type="submit" 
           disabled={isSubmitting}
@@ -253,3 +245,4 @@ export default function ProfileSetupForm({ onSubmitSuccess }) {
     </div>
   )
 }
+

@@ -13,13 +13,10 @@ export default function DashboardPreview() {
       viewport={{ once: true }}
       className="relative z-10 w-full max-w-[320px] aspect-[9/19] bg-[#050505] rounded-[3rem] border-[10px] border-[#1a1a1a] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden text-left font-light"
     >
-      {/* Phone Notch */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#1a1a1a] rounded-b-2xl z-20" />
 
-      {/* Mockup Dashboard Content */}
       <div className="h-full pt-10 pb-6 px-5 overflow-y-hidden hide-scrollbar bg-[#0a0a0a] flex flex-col justify-between">
         <div>
-          {/* Header */}
           <div className="flex justify-between items-center mb-8">
             <h3 className="text-lg font-medium text-white tracking-tight">
               Analytics
@@ -29,7 +26,6 @@ export default function DashboardPreview() {
             </div>
           </div>
 
-          {/* TDEE Card */}
           <Card
             variant="outline"
             className="p-5 bg-white/[0.02] border-white/5 mb-6"
@@ -44,7 +40,6 @@ export default function DashboardPreview() {
               </span>
             </p>
 
-            {/* Mini Chart Mockup */}
             <div className="flex items-end gap-1 h-16 w-full mt-2">
               {[40, 60, 45, 70, 55, 85, 65, 90, 75].map((h, i) => (
                 <div
@@ -58,7 +53,6 @@ export default function DashboardPreview() {
             </div>
           </Card>
 
-          {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <Card
               variant="outline"
@@ -86,7 +80,6 @@ export default function DashboardPreview() {
             </Card>
           </div>
 
-          {/* Large Chart Area */}
           <Card
             variant="outline"
             className="p-5 bg-white/[0.02] border-white/5 mb-6"
@@ -98,7 +91,6 @@ export default function DashboardPreview() {
               <p className="text-[10px] text-white/40">Last 30 days</p>
             </div>
             <div className="relative h-32 w-full flex items-center justify-center">
-              {/* SVG Wave Line Mockup */}
               <svg
                 viewBox="0 0 100 40"
                 className="w-full h-full overflow-visible"
@@ -132,7 +124,6 @@ export default function DashboardPreview() {
           </Card>
         </div>
 
-        {/* Bottom Nav Mockup */}
         <div className="absolute bottom-0 left-0 w-full h-16 bg-black/80 backdrop-blur-md border-t border-white/5 flex items-center justify-around px-4">
           {[1, 2, 3, 4].map((i) => (
             <div
@@ -149,3 +140,4 @@ export default function DashboardPreview() {
     </motion.div>
   )
 }
+

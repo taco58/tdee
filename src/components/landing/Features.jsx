@@ -31,10 +31,9 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="relative py-28 px-6 bg-[#0A0A0F] border-t border-white/5">
+    <section id="features" className="relative py-28 px-6 border-t border-white/5 z-10">
       <div className="max-w-6xl mx-auto relative z-10">
         
-        {/* Eyebrow & Headline */}
         <div className="text-center mb-16">
           <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-4">
             THE DETAILS
@@ -44,7 +43,6 @@ export default function Features() {
           </h2>
         </div>
 
-        {/* Feature Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((feature) => (
             <motion.div
@@ -73,3 +71,4 @@ export default function Features() {
     </section>
   )
 }
+

@@ -12,7 +12,6 @@ import {
   ResponsiveContainer,
 } from "recharts"
 
-// Custom High-Contrast Tooltip
 const CustomWeightTooltip = ({ active, payload, label, weightUnit = "lbs" }) => {
   if (active && payload && payload.length) {
     const rawVal = payload.find((p) => p.dataKey === "weight")?.value
@@ -53,7 +52,6 @@ const CustomWeightTooltip = ({ active, payload, label, weightUnit = "lbs" }) => 
 }
 
 export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
-  // Calculate min and max for nicely padded Y-axis
   const weights = weightData.map((d) => d.weight).filter(Boolean)
   const minWeight = Math.floor(Math.min(...weights, 148)) - 1
   const maxWeight = Math.ceil(Math.max(...weights, 155)) + 1
@@ -65,7 +63,6 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
       transition={{ duration: 0.4 }}
       className="bg-[#0D0D0D] border border-white/5 rounded-2xl p-5 md:p-6 shadow-xl"
     >
-      {/* Header with Title & Legend */}
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-sm font-bold text-white tracking-tight">
@@ -74,7 +71,6 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
           <p className="text-[11px] text-zinc-500">6 weeks · daily logs vs rolling average ({weightUnit})</p>
         </div>
 
-        {/* Legend */}
         <div className="flex items-center gap-3 text-[10px] font-medium text-zinc-500">
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-[2px] bg-zinc-500 rounded-full" style={{ borderTop: '1px dashed #71717a' }} />
@@ -94,7 +90,6 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
               data={weightData}
               margin={{ top: 10, right: 15, left: 15, bottom: 10 }}
             >
-              {/* Horizontal Subtle Gridlines for Clear Value Estimation */}
               <CartesianGrid
                 stroke="rgba(255,255,255,0.06)"
                 vertical={false}
@@ -120,7 +115,6 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
 
               <Tooltip content={<CustomWeightTooltip weightUnit={weightUnit} />} />
 
-              {/* Line 1: Daily Raw Weight Logs with Dots */}
               <Line
                 type="monotone"
                 dataKey="weight"
@@ -137,7 +131,6 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
                 }}
               />
 
-              {/* Line 2: 7-Day Smooth Rolling Average */}
               <Line
                 type="monotone"
                 dataKey="rollingAvg"
@@ -163,3 +156,4 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
     </motion.div>
   )
 }
+

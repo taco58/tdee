@@ -19,7 +19,6 @@ export default function DashboardHeader({ profile }) {
   const userHeight = profile?.height_cm
   const userGender = profile?.sex
 
-  // Handle scroll shadow
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
@@ -28,7 +27,6 @@ export default function DashboardHeader({ profile }) {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Handle click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -48,7 +46,6 @@ export default function DashboardHeader({ profile }) {
       }`}
     >
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between">
-        {/* Left: Brand Logo */}
         <Link href="/dashboard" className="flex items-center gap-2.5 group select-none">
           <Image
             src="/logo.png"
@@ -59,7 +56,6 @@ export default function DashboardHeader({ profile }) {
           />
         </Link>
 
-        {/* Right: User Profile Dropdown */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -81,7 +77,6 @@ export default function DashboardHeader({ profile }) {
                 transition={{ duration: 0.15 }}
                 className="absolute right-0 top-full mt-2 w-56 bg-[#0D0D0D] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 p-1.5 font-sans"
               >
-                {/* Header User Badge */}
                 <div className="px-3 py-2.5 mb-1 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
                   <div>
                     <p className="text-xs font-bold text-white leading-none">{userName}</p>
@@ -94,7 +89,6 @@ export default function DashboardHeader({ profile }) {
                   </div>
                 </div>
 
-                {/* Option 1: Edit Profile */}
                 <Link
                   href="/info-form"
                   onClick={() => setDropdownOpen(false)}
@@ -106,7 +100,6 @@ export default function DashboardHeader({ profile }) {
 
                 <div className="h-px bg-white/5 my-1" />
 
-                {/* Option 2: Sign Out */}
                 <button
                   onClick={() => {
                     setDropdownOpen(false)
@@ -125,3 +118,4 @@ export default function DashboardHeader({ profile }) {
     </header>
   )
 }
+

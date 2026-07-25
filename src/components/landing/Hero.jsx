@@ -9,11 +9,9 @@ import Link from "next/link"
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden bg-[#0A0A0F] py-20 px-6">
-      {/* Background orange radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] max-w-[600px] max-h-[600px] bg-[#F97316]/5 rounded-full blur-[50px] pointer-events-none z-0" />
 
       <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
-        {/* Headline */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -25,7 +23,6 @@ export default function Hero() {
           </h1>
         </motion.div>
 
-        {/* Subtitle */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -36,7 +33,6 @@ export default function Hero() {
           </p>
         </motion.div>
 
-        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -52,3 +48,4 @@ export default function Hero() {
     </section>
   )
 }
+

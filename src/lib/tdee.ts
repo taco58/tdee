@@ -127,7 +127,7 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
   const averages: any[] = []
 
   for (let i = 0; i < weeks.length; i++) {
-    const fallbackWeight = averages[i - 1]?.avgWeight ?? startWeight
+    const fallbackWeight = averages[i - 1]?.avgWeight ?? (startWeight || 150)
     const fallbackCalories = averages[i - 1]?.avgCalories ?? formulaTDEE
 
     const filled = gapFill(weeks[i], fallbackWeight, fallbackCalories)
@@ -140,9 +140,13 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
   }
 
   const weeklyTDEEs = averages.map((week, i) => {
-    const prevWeight = i === 0 ? startWeight : averages[i - 1].avgWeight
+    if (i === 0) {
+      return formulaTDEE
+    }
+    const prevWeight = averages[i - 1].avgWeight
     const delta = week.avgWeight - prevWeight
-    return week.avgCalories - (delta * unitEnergy) / 7
+    const rawTDEE = week.avgCalories - (delta * unitEnergy) / 7
+    return Math.max(formulaTDEE * 0.5, Math.min(formulaTDEE * 1.5, rawTDEE))
   })
 
   const recentTDEEs = weeklyTDEEs.slice(-6)
@@ -168,13 +172,13 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
     }
   })
 
-  // Format 7-day rolling weight chart data for WeightTrendChart
+
   const weightChartData = logs.map((log, idx) => {
     const window = logs.slice(Math.max(0, idx - 6), idx + 1)
     const validWeights = window.map((d) => d.weight).filter(Boolean)
     const rollingAvg = validWeights.length > 0
       ? parseFloat((validWeights.reduce((a, b) => a + b, 0) / validWeights.length).toFixed(1))
-      : log.weight || startWeight
+      : log.weight || startWeight || 150
 
     const dateFormatted = log.date
       ? new Date(log.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
@@ -188,8 +192,8 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
     }
   })
 
-  const latestAvgWeight = averages.at(-1)?.avgWeight ?? startWeight
-  const prevAvgWeight = averages.at(-2)?.avgWeight ?? startWeight
+  const latestAvgWeight = averages.at(-1)?.avgWeight ?? (startWeight || 150)
+  const prevAvgWeight = averages.at(-2)?.avgWeight ?? (startWeight || 150)
   const rawDelta = averages.length >= 2 ? latestAvgWeight - prevAvgWeight : 0
   const weeklyDelta = parseFloat(rawDelta.toFixed(1))
 

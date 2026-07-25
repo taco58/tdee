@@ -12,7 +12,6 @@ export default function LoginForm({ className, ...props }) {
     <div className={cn("flex flex-col gap-6 w-full font-light", className)} {...props}>
       <div className="bg-[#0D0D0D] border border-white/5 rounded-2xl p-6 md:p-8 w-full text-left">
         
-        {/* Eyebrow & Editorial Title */}
         <div className="mb-8">
           <p className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-2">
             LOGIN
@@ -33,7 +32,6 @@ export default function LoginForm({ className, ...props }) {
 
         <form action={formAction}>
           <div className="flex flex-col gap-5">
-            {/* Email Field */}
             <div className="flex flex-col">
               <label htmlFor="email" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold mb-2">
                 Email Address
@@ -48,7 +46,6 @@ export default function LoginForm({ className, ...props }) {
               />
             </div>
 
-            {/* Password Field */}
             <div className="flex flex-col">
               <div className="flex justify-between items-center mb-2">
                 <label htmlFor="password" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold">
@@ -70,7 +67,6 @@ export default function LoginForm({ className, ...props }) {
               />
             </div>
 
-            {/* Submit Button */}
             <div className="flex flex-col gap-3 mt-2">
               <Button type="submit" disabled={isPending} className="w-full rounded-full bg-[#F97316] hover:bg-[#EA580C] text-white border-transparent py-2.5 text-[10px] uppercase tracking-[0.15em] font-bold shadow-none transition-colors disabled:opacity-50">
                 {isPending ? "Logging in..." : "Login"}
@@ -86,7 +82,6 @@ export default function LoginForm({ className, ...props }) {
         </form>
       </div>
 
-      {/* Sub Footer Agreement */}
       <p className="px-6 text-center text-[10px] text-white/35 leading-relaxed">
         By clicking continue, you agree to our{" "}
         <a href="#" className="hover:text-white transition-colors underline">Terms of Service</a>{" "}
@@ -96,3 +91,4 @@ export default function LoginForm({ className, ...props }) {
     </div>
   )
 }
+

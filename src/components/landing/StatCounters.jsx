@@ -20,7 +20,7 @@ export default function StatCounters() {
   ];
 
   return (
-    <section className="relative py-28 px-6 bg-[#0D0D0D] border-t border-white/5">
+    <section className="relative py-28 px-6 border-t border-white/5 z-10">
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
           {stats.map((stat, idx) => (

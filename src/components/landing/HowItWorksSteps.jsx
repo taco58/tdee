@@ -23,10 +23,9 @@ export default function HowItWorksSteps() {
   ];
 
   return (
-    <section id="how-it-works" className="relative py-28 px-6 bg-[#0A0A0F] border-t border-white/5">
+    <section id="how-it-works" className="relative py-28 px-6 border-t border-white/5 z-10">
       <div className="max-w-6xl mx-auto relative z-10 text-center">
         
-        {/* Eyebrow & Headline */}
         <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-4">
           HOW IT WORKS
         </p>
@@ -34,7 +33,6 @@ export default function HowItWorksSteps() {
           Tracking that <span className="text-[#F97316] italic font-normal">actually</span> works.
         </h2>
 
-        {/* Steps Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
           {steps.map((step, idx) => (
             <motion.div
@@ -61,3 +59,4 @@ export default function HowItWorksSteps() {
     </section>
   );
 }
+

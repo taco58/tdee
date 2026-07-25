@@ -8,11 +8,9 @@ export default function LoginPage() {
     <main
       className={`min-h-screen bg-[#0A0A0F] text-white selection:bg-orange-500/30 flex items-center justify-center p-6 md:p-10 ${dmSans.className}`}
     >
-      {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[500px] max-h-[500px] bg-[#F97316]/5 rounded-full blur-[100px] pointer-events-none z-0" />
 
       <div className="w-full max-w-sm flex flex-col items-center gap-8 relative z-10">
-        {/* Logo home link */}
         <Link href="/">
           <button className="cursor-pointer flex items-center justify-center rounded-full hover:opacity-85 transition-opacity">
             <Image 
@@ -32,3 +30,4 @@ export default function LoginPage() {
     </main>
   )
 }
+
