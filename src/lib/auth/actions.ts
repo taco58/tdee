@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 
 import { createClient } from '@/lib/supabase/server'
 
-export async function login(formData: FormData) {
+export async function login(prevState: any, formData: FormData) {
   const supabase = await createClient()
 
   // type-casting here for convenience
@@ -18,14 +18,14 @@ export async function login(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
-    redirect('/error')
+    return {error: error.message}
   }
 
   revalidatePath('/', 'layout')
-  redirect('/account')
+  redirect('/dashboard')
 }
 
-export async function signup(formData: FormData) {
+export async function signup(prevState: any, formData: FormData) {
   const supabase = await createClient()
 
   // type-casting here for convenience
@@ -38,9 +38,28 @@ export async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp(data)
 
   if (error) {
-    redirect('/error')
+    return {error: error.message}
   }
 
+  // const cookieStore = await cookies();
+  // cookieStore.set("signup_progress", "true", {
+  //   maxAge: 5,
+  //   path: "/",
+  //   httpOnly: true,
+  //   secure: true,
+  // })
+
   revalidatePath('/', 'layout')
-  redirect('/account')
+  redirect('/info-form')
+}
+
+export async function logout() {
+  const supabase = await createClient()
+  // Check if a user's logged in
+  const { data: claimsData } = await supabase.auth.getClaims()
+  if (claimsData?.claims) {
+    await supabase.auth.signOut()
+  }
+  revalidatePath('/', 'layout')
+  redirect('/')
 }

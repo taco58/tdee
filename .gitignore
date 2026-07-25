@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agent & tooling folders
+.agent/
+.agents/
+.antigravitycli/
+.gemini/
+.vscode/
