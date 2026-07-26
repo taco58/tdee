@@ -48,11 +48,15 @@ export async function createLogEntry(logData: any) {
 
   const { data, error } = await supabase
     .from("logs")
-    .insert({
-      date: logData.date,
-      weight: logData.weight ? parseFloat(logData.weight) : null,
-      calories: logData.calories ? parseInt(logData.calories, 10) : null,
-    })
+    .upsert(
+      {
+        user_id: user.id,
+        date: logData.date,
+        weight: logData.weight ? parseFloat(logData.weight) : null,
+        calories: logData.calories ? parseInt(logData.calories, 10) : null,
+      },
+      { onConflict: "user_id,date" }
+    )
     .select()
 
   if (error) {

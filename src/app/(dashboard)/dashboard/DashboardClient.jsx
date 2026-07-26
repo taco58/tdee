@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 import DashboardHeader from "@/components/dashboard/DashboardHeader"
@@ -12,6 +12,13 @@ import LogHistoryCalendar from "@/components/dashboard/LogHistoryCalendar"
 import LogTodaySection from "@/components/dashboard/LogTodaySection"
 import { createLogEntry } from "@/lib/profile-actions"
 
+const getLocalDateString = (d = new Date()) => {
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
+}
+
 const generateCalendarFromLogs = (logs = []) => {
   const days = []
   const today = new Date()
@@ -19,6 +26,7 @@ const generateCalendarFromLogs = (logs = []) => {
   const currentMonth = today.getMonth()
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
   const todayDate = today.getDate()
+  const todayLocalStr = getLocalDateString(today)
 
   const logMap = new Map()
   logs.forEach((l) => {
@@ -36,7 +44,7 @@ const generateCalendarFromLogs = (logs = []) => {
       dayNumber: d,
       dateStr: l.date,
       isLogged,
-      isToday: l.date === today.toISOString().split("T")[0],
+      isToday: l.date === todayLocalStr,
       isFuture: false,
       weight: l.weight != null ? l.weight.toString() : null,
       calories: l.calories != null ? l.calories.toString() : null,
@@ -73,28 +81,36 @@ export default function DashboardClient({
   const router = useRouter()
   const weightUnit = initialProfile?.units || initialAdaptiveStats?.units || "lbs"
 
-  const [stats, setStats] = useState({
-    tdee: initialAdaptiveStats.tdee || (initialAdaptiveStats.formulaEstimate || 2050),
-    avgWeight: initialAdaptiveStats.avgWeight ?? null,
-    weeklyDelta: initialAdaptiveStats.weeklyDelta ?? 0,
-    avgCalories: initialAdaptiveStats.avgCalories ?? null,
-    daysLogged: initialAdaptiveStats.daysLogged || initialLogs.length,
-    confidence: initialAdaptiveStats.confidence || 0,
-    weeksOfData: initialAdaptiveStats.weeksOfData || 0,
-    formulaEstimate: initialAdaptiveStats.formulaEstimate || 2050,
-    unit: weightUnit,
-  })
+  const stats = React.useMemo(
+    () => ({
+      tdee: initialAdaptiveStats.tdee || (initialAdaptiveStats.formulaEstimate || 2050),
+      avgWeight: initialAdaptiveStats.avgWeight ?? null,
+      weeklyDelta: initialAdaptiveStats.weeklyDelta ?? 0,
+      avgCalories: initialAdaptiveStats.avgCalories ?? null,
+      daysLogged: initialAdaptiveStats.daysLogged || initialLogs.length,
+      confidence: initialAdaptiveStats.confidence || 0,
+      weeksOfData: initialAdaptiveStats.weeksOfData || 0,
+      formulaEstimate: initialAdaptiveStats.formulaEstimate || 2050,
+      unit: weightUnit,
+    }),
+    [initialAdaptiveStats, initialLogs, weightUnit]
+  )
 
   const weightData = initialAdaptiveStats.weightChartData || []
-
   const tdeeData = initialAdaptiveStats.tdeeHistory || []
 
-  const [calendarDays, setCalendarDays] = useState(generateCalendarFromLogs(initialLogs))
+  const calendarDays = React.useMemo(
+    () => generateCalendarFromLogs(initialLogs),
+    [initialLogs]
+  )
 
-  const todayStr = new Date().toISOString().split("T")[0]
-  const todayLoggedOnServer = initialLogs.some((l) => l.date === todayStr && (l.weight !== null || l.calories !== null))
-  const [isLoggedToday, setIsLoggedToday] = useState(todayLoggedOnServer)
+  const todayStr = getLocalDateString()
+  const isLoggedToday = React.useMemo(
+    () => initialLogs.some((l) => l.date === todayStr && (l.weight !== null || l.calories !== null)),
+    [initialLogs, todayStr]
+  )
 
+  const [isEditingToday, setIsEditingToday] = useState(false)
   const [logPanelOpen, setLogPanelOpen] = useState(false)
   const [inputWeight, setInputWeight] = useState(`${stats.avgWeight ?? ""}`)
   const [inputCalories, setInputCalories] = useState(`${stats.avgCalories ?? ""}`)
@@ -105,52 +121,23 @@ export default function DashboardClient({
 
   const handleSaveTodayLog = async (e) => {
     e.preventDefault()
-    setIsLoggedToday(true)
+    setIsEditingToday(false)
     setLogPanelOpen(false)
 
     if (inputWeight && inputCalories) {
-      const dateStr = new Date().toISOString().split("T")[0]
+      const dateStr = getLocalDateString()
       try {
-        await createLogEntry({
+        const res = await createLogEntry({
           date: dateStr,
           weight: inputWeight,
           calories: inputCalories,
         })
-        router.refresh()
+        if (res?.success) {
+          router.refresh()
+        }
       } catch (err) {
         console.log("Saving log entry note:", err)
       }
-
-      setStats((prev) => ({
-        ...prev,
-        avgWeight: parseFloat(inputWeight),
-        avgCalories: parseInt(inputCalories, 10),
-      }))
-
-      setCalendarDays((prev) => {
-        const next = [...prev]
-        const idx = next.findIndex((d) => d.dateStr === dateStr)
-        if (idx >= 0) {
-          next[idx] = {
-            ...next[idx],
-            isLogged: true,
-            weight: inputWeight,
-            calories: inputCalories,
-          }
-        } else {
-          const parts = dateStr.split("-").map(Number)
-          next.push({
-            dayNumber: parts[2],
-            dateStr,
-            isLogged: true,
-            isToday: true,
-            isFuture: false,
-            weight: inputWeight,
-            calories: inputCalories,
-          })
-        }
-        return next
-      })
     }
   }
 
@@ -165,41 +152,21 @@ export default function DashboardClient({
     if (!selectedCalendarDay || !selectedCalendarDay.dateStr) return
 
     const dateStr = selectedCalendarDay.dateStr
+    const hasWeight = editDayWeight !== "" && !isNaN(parseFloat(editDayWeight))
+    const hasCalories = editDayCalories !== "" && !isNaN(parseInt(editDayCalories, 10))
+
     try {
-      await createLogEntry({
+      const res = await createLogEntry({
         date: dateStr,
-        weight: editDayWeight,
-        calories: editDayCalories,
+        weight: hasWeight ? editDayWeight : null,
+        calories: hasCalories ? editDayCalories : null,
       })
-      router.refresh()
+      if (res?.success) {
+        router.refresh()
+      }
     } catch (err) {
       console.log("Calendar entry save note:", err)
     }
-
-    setCalendarDays((prev) => {
-      const next = [...prev]
-      const idx = next.findIndex((d) => d.dateStr === dateStr)
-      if (idx >= 0) {
-        next[idx] = {
-          ...next[idx],
-          isLogged: true,
-          weight: editDayWeight,
-          calories: editDayCalories,
-        }
-      } else {
-        const parts = dateStr.split("-").map(Number)
-        next.push({
-          dayNumber: parts[2],
-          dateStr,
-          isLogged: true,
-          isToday: dateStr === todayStr,
-          isFuture: false,
-          weight: editDayWeight,
-          calories: editDayCalories,
-        })
-      }
-      return next
-    })
 
     setSelectedCalendarDay(null)
   }
@@ -243,8 +210,8 @@ export default function DashboardClient({
             <StatGrid stats={stats} />
 
             <LogTodaySection
-              isLoggedToday={isLoggedToday}
-              setIsLoggedToday={setIsLoggedToday}
+              isLoggedToday={isLoggedToday && !isEditingToday}
+              setIsLoggedToday={() => setIsEditingToday(true)}
               logPanelOpen={logPanelOpen}
               setLogPanelOpen={setLogPanelOpen}
               inputWeight={inputWeight}

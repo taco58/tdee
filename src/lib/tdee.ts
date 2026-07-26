@@ -5,10 +5,6 @@ import { createClient } from "@/lib/supabase/server"
 export async function getLogsData() {
   const supabase = await createClient()
 
-  const eightWeeksAgo = new Date()
-  eightWeeksAgo.setDate(eightWeeksAgo.getDate() - 56)
-  const dateString = eightWeeksAgo.toISOString().split("T")[0]
-
   const {
     data: { user },
     error: authError,
@@ -20,7 +16,6 @@ export async function getLogsData() {
   const { data: logs, error } = await supabase
     .from("logs")
     .select("date, weight, calories")
-    .gte("date", dateString)
     .order("date", { ascending: true })
 
   if (error) {
@@ -56,7 +51,7 @@ export async function getProfileData() {
   return profile
 }
 
-function groupIntoWeeks(logs) {
+function groupIntoWeeks(logs: any[]) {
   const weeks = []
   
   for (let i = 0; i < logs.length; i += 7) {
@@ -66,24 +61,43 @@ function groupIntoWeeks(logs) {
   return weeks
 }
 
-function gapFill(week, baseCal, baseWeight) {
-    const result = []
+function gapFill(week: any[], fallbackWeight: number, fallbackCalories: number) {
+  const result: any[] = []
 
-    for (let i = 0; i < 7; i++) {
-        const day = week[i]
-        
-        if (day) {
-            result.push({ ...day, logged: true })
-        } else {
-            const prev = result[i-1]
-            result.push({
-                weight: prev ? prev.weight : baseWeight,
-                calories: prev ? prev.calories : baseCal,
-                logged: false
-            })
-        }
+  for (let i = 0; i < 7; i++) {
+    const day = week[i]
+
+    const parsedWeight = day && day.weight != null ? parseFloat(day.weight) : NaN
+    const parsedCalories = day && day.calories != null ? parseInt(day.calories, 10) : NaN
+
+    const hasValidWeight = !isNaN(parsedWeight)
+    const hasValidCalories = !isNaN(parsedCalories)
+
+    if (hasValidWeight && hasValidCalories) {
+      result.push({
+        ...day,
+        weight: parsedWeight,
+        calories: parsedCalories,
+        logged: true,
+      })
+    } else {
+      const prev = result[i - 1]
+      const weight = hasValidWeight
+        ? parsedWeight
+        : prev ? prev.weight : fallbackWeight
+      const calories = hasValidCalories
+        ? parsedCalories
+        : prev ? prev.calories : fallbackCalories
+
+      result.push({
+        ...(day || {}),
+        weight,
+        calories,
+        logged: false,
+      })
     }
-    return result
+  }
+  return result
 }
 
 export async function mifflinStJeor(profile: any): Promise<number> {
@@ -123,89 +137,132 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
     }
   }
 
-  const weeks = groupIntoWeeks(logs)
-  const averages: any[] = []
+  const cleanedLogs = logs
+    .map((l) => ({
+      date: l.date,
+      weight: l.weight != null && !isNaN(parseFloat(l.weight)) ? parseFloat(l.weight) : null,
+      calories: l.calories != null && !isNaN(parseInt(l.calories, 10)) ? parseInt(l.calories, 10) : null,
+    }))
+    .filter((l) => l.date)
+    .sort((a, b) => (a.date > b.date ? 1 : -1))
 
-  for (let i = 0; i < weeks.length; i++) {
-    const fallbackWeight = averages[i - 1]?.avgWeight ?? (startWeight || 150)
-    const fallbackCalories = averages[i - 1]?.avgCalories ?? formulaTDEE
+  const startDate = new Date(cleanedLogs[0].date)
+  const endDate = new Date(cleanedLogs[cleanedLogs.length - 1].date)
+  
+  const logMap = new Map<string, { weight: number | null; calories: number | null }>()
+  cleanedLogs.forEach((l) => logMap.set(l.date, { weight: l.weight, calories: l.calories }))
 
-    const filled = gapFill(weeks[i], fallbackWeight, fallbackCalories)
+  const dailySeries: Array<{ date: string; weight: number | null; calories: number | null }> = []
+  let curr = new Date(startDate)
+  
+  while (curr <= endDate) {
+    const dStr = curr.toISOString().split("T")[0]
+    const entry = logMap.get(dStr) || { weight: null, calories: null }
+    dailySeries.push({ date: dStr, weight: entry.weight, calories: entry.calories })
+    curr.setDate(curr.getDate() + 1)
+  }
 
-    averages.push({
-      avgWeight: filled.reduce((s, d) => s + d.weight, 0) / 7,
-      avgCalories: filled.reduce((s, d) => s + d.calories, 0) / 7,
-      daysLogged: weeks[i].filter((d) => d.logged).length,
+  let wtTrend: number | null = null
+  let calTrend: number | null = null
+  let tdeeTrend: number = formulaTDEE
+
+  const dailyState: Array<{
+    date: string
+    rawWeight: number | null
+    weightTrend: number | null
+    rawCalories: number | null
+    calorieTrend: number | null
+    tdeeTrend: number
+  }> = []
+
+  for (let i = 0; i < dailySeries.length; i++) {
+    const day = dailySeries[i]
+
+    if (day.weight !== null) {
+      wtTrend = wtTrend === null ? day.weight : 0.06 * day.weight + 0.94 * wtTrend
+    }
+
+    if (day.calories !== null) {
+      calTrend = calTrend === null ? day.calories : 0.14 * day.calories + 0.86 * calTrend
+    }
+
+    if (i > 0 && wtTrend !== null && calTrend !== null) {
+      const prevWt = dailyState[i - 1].weightTrend ?? wtTrend
+      const rawDelta = wtTrend - prevWt
+      
+      const maxDailyDelta = isKg ? 0.03 : 0.07
+      const clampedDelta = Math.max(-maxDailyDelta, Math.min(maxDailyDelta, rawDelta))
+
+      const rawTDEE = calTrend - clampedDelta * unitEnergy
+      tdeeTrend = 0.04 * rawTDEE + 0.96 * tdeeTrend
+    }
+
+    dailyState.push({
+      date: day.date,
+      rawWeight: day.weight,
+      weightTrend: wtTrend,
+      rawCalories: day.calories,
+      calorieTrend: calTrend,
+      tdeeTrend,
     })
   }
 
-  const weeklyTDEEs = averages.map((week, i) => {
-    if (i === 0) {
-      return formulaTDEE
+  const latestState = dailyState[dailyState.length - 1]
+  const currentAdaptedTDEE = latestState.tdeeTrend
+
+  const validLoggedCount = cleanedLogs.filter((d) => d.weight !== null && d.calories !== null).length
+  const dataWeight = Math.min(0.95, validLoggedCount / 42)
+  const finalTDEE = Math.round((formulaTDEE * (1 - dataWeight) + currentAdaptedTDEE * dataWeight) / 5) * 5
+
+  const tdeeHistory: Array<{ week: string; date: string; tdee: number }> = []
+  for (let idx = 6; idx < dailyState.length; idx += 7) {
+    const s = dailyState[idx]
+    const dtFormatted = new Date(s.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    tdeeHistory.push({
+      week: `Wk ${tdeeHistory.length + 1}`,
+      date: dtFormatted,
+      tdee: Math.round(s.tdeeTrend / 5) * 5,
+    })
+  }
+  if (dailyState.length > 0) {
+    const s = dailyState[dailyState.length - 1]
+    const dtFormatted = new Date(s.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    const lastHist = tdeeHistory[tdeeHistory.length - 1]
+    if (!lastHist || lastHist.date !== dtFormatted) {
+      tdeeHistory.push({
+        week: `Wk ${tdeeHistory.length + 1}`,
+        date: dtFormatted,
+        tdee: Math.round(s.tdeeTrend / 5) * 5,
+      })
     }
-    const prevWeight = averages[i - 1].avgWeight
-    const delta = week.avgWeight - prevWeight
-    const rawTDEE = week.avgCalories - (delta * unitEnergy) / 7
-    return Math.max(formulaTDEE * 0.5, Math.min(formulaTDEE * 1.5, rawTDEE))
-  })
+  }
 
-  const recentTDEEs = weeklyTDEEs.slice(-6)
-  const adaptedTDEE = recentTDEEs.length > 0
-    ? recentTDEEs.reduce((s, t) => s + t, 0) / recentTDEEs.length
-    : formulaTDEE
-
-  const dataWeight = Math.min(0.9, logs.length / 60)
-  const blendedTDEE = formulaTDEE * (1 - dataWeight) + adaptedTDEE * dataWeight
-
-  const tdeeHistory = recentTDEEs.map((tdee, i) => {
-    const weekIdx = weeklyTDEEs.length - recentTDEEs.length + i
-    const weekLogs = weeks[weekIdx] || []
-    const lastDate = weekLogs[weekLogs.length - 1]?.date
-    const dateFormatted = lastDate
-      ? new Date(lastDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })
-      : `Wk ${weekIdx + 1}`
-
-    return {
-      week: `Wk ${weekIdx + 1}`,
-      date: dateFormatted,
-      tdee: Math.round(tdee / 5) * 5,
-    }
-  })
-
-
-  const weightChartData = logs.map((log, idx) => {
-    const window = logs.slice(Math.max(0, idx - 6), idx + 1)
-    const validWeights = window.map((d) => d.weight).filter(Boolean)
-    const rollingAvg = validWeights.length > 0
-      ? parseFloat((validWeights.reduce((a, b) => a + b, 0) / validWeights.length).toFixed(1))
-      : log.weight || startWeight || 150
-
-    const dateFormatted = log.date
-      ? new Date(log.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
-      : `Day ${idx + 1}`
-
-    return {
-      date: dateFormatted,
-      weight: log.weight || rollingAvg,
-      rollingAvg: rollingAvg,
+  const weightChartData = dailyState
+    .filter((s) => s.rawWeight !== null || s.weightTrend !== null)
+    .map((s, idx) => ({
+      date: new Date(s.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      weight: s.rawWeight || (s.weightTrend ? parseFloat(s.weightTrend.toFixed(1)) : null),
+      rollingAvg: s.weightTrend ? parseFloat(s.weightTrend.toFixed(1)) : (startWeight || 150),
       dayNum: idx + 1,
-    }
-  })
+    }))
 
-  const latestAvgWeight = averages.at(-1)?.avgWeight ?? (startWeight || 150)
-  const prevAvgWeight = averages.at(-2)?.avgWeight ?? (startWeight || 150)
-  const rawDelta = averages.length >= 2 ? latestAvgWeight - prevAvgWeight : 0
-  const weeklyDelta = parseFloat(rawDelta.toFixed(1))
+  const state7DaysAgo = dailyState[Math.max(0, dailyState.length - 8)]
+  const rawWeeklyDelta = (latestState.weightTrend && state7DaysAgo?.weightTrend)
+    ? latestState.weightTrend - state7DaysAgo.weightTrend
+    : 0
+
+  const latestAvgWeight = latestState.weightTrend ?? (startWeight || 150)
+  const latestAvgCal = latestState.calorieTrend ?? 2000
 
   return {
-    tdee: Math.round(blendedTDEE / 5) * 5,
+    tdee: finalTDEE,
     avgWeight: parseFloat(latestAvgWeight.toFixed(1)),
     currentWeight: parseFloat(latestAvgWeight.toFixed(1)),
-    weeklyDelta,
-    avgCalories: Math.round(averages.at(-1)?.avgCalories ?? 2000),
-    daysLogged: logs.length,
-    confidence: Math.min(100, Math.round((logs.length / 42) * 100)),
-    weeksOfData: averages.length,
+    weeklyDelta: parseFloat(rawWeeklyDelta.toFixed(1)),
+    avgCalories: Math.round(latestAvgCal),
+    daysLogged: validLoggedCount,
+    confidence: Math.min(100, Math.round((validLoggedCount / 42) * 100)),
+    weeksOfData: Math.max(1, Math.ceil(dailyState.length / 7)),
     formulaEstimate: formulaTDEE,
     units: userUnits,
     tdeeHistory,

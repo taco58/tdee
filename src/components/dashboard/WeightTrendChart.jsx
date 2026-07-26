@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import {
   LineChart,
@@ -11,8 +11,14 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts"
+import { Tabs } from "@heroui/react"
 
-const CustomWeightTooltip = ({ active, payload, label, weightUnit = "lbs" }) => {
+const CustomWeightTooltip = ({
+  active,
+  payload,
+  label,
+  weightUnit = "lbs",
+}) => {
   if (active && payload && payload.length) {
     const rawVal = payload.find((p) => p.dataKey === "weight")?.value
     const avgVal = payload.find((p) => p.dataKey === "rollingAvg")?.value
@@ -26,15 +32,21 @@ const CustomWeightTooltip = ({ active, payload, label, weightUnit = "lbs" }) => 
         <div className="space-y-1.5 font-mono">
           <div className="flex justify-between items-center text-zinc-300">
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-zinc-400" /> Daily Weight:
+              <span className="w-2 h-2 rounded-full bg-zinc-400" /> Daily
+              Weight:
             </span>
-            <span className="font-bold text-white">{rawVal} {weightUnit}</span>
+            <span className="font-bold text-white">
+              {rawVal} {weightUnit}
+            </span>
           </div>
           <div className="flex justify-between items-center text-[#F97316]">
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#F97316]" /> 7-Day Trend:
+              <span className="w-2 h-2 rounded-full bg-[#F97316]" /> 7-Day
+              Trend:
             </span>
-            <span className="font-bold">{avgVal} {weightUnit}</span>
+            <span className="font-bold">
+              {avgVal} {weightUnit}
+            </span>
           </div>
           {diff !== null && (
             <div className="pt-1.5 border-t border-white/10 flex justify-between text-[11px] text-white/50 font-sans">
@@ -51,10 +63,31 @@ const CustomWeightTooltip = ({ active, payload, label, weightUnit = "lbs" }) => 
   return null
 }
 
+const RANGE_OPTIONS = [
+  { id: "week", label: "Week", days: 7 },
+  { id: "month", label: "Month", days: 30 },
+  { id: "year", label: "Year", days: 365 },
+  { id: "all", label: "All", days: null },
+]
+
 export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
-  const weights = weightData.map((d) => d.weight).filter(Boolean)
-  const minWeight = Math.floor(Math.min(...weights, 148)) - 1
-  const maxWeight = Math.ceil(Math.max(...weights, 155)) + 1
+  const [selectedRange, setSelectedRange] = useState("month")
+
+  const selectedDays = RANGE_OPTIONS.find((r) => r.id === selectedRange)?.days
+  const filteredData = selectedDays
+    ? weightData.slice(-selectedDays)
+    : weightData
+
+  const allWeights = filteredData
+    .flatMap((d) => [d.weight, d.rollingAvg])
+    .filter((w) => typeof w === "number" && !isNaN(w) && w > 0)
+
+  const minWeight = allWeights.length
+    ? Math.floor(Math.min(...allWeights) - 1)
+    : "dataMin - 1"
+  const maxWeight = allWeights.length
+    ? Math.ceil(Math.max(...allWeights) + 1)
+    : "dataMax + 1"
 
   return (
     <motion.div
@@ -68,12 +101,17 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
           <h3 className="text-sm font-bold text-white tracking-tight">
             Weight Trend
           </h3>
-          <p className="text-[11px] text-zinc-500">6 weeks · daily logs vs rolling average ({weightUnit})</p>
+          <p className="text-[11px] text-zinc-500">
+            Daily logs vs rolling average ({weightUnit})
+          </p>
         </div>
 
         <div className="flex items-center gap-3 text-[10px] font-medium text-zinc-500">
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-[2px] bg-zinc-500 rounded-full" style={{ borderTop: '1px dashed #71717a' }} />
+            <span
+              className="w-3 h-[2px] bg-zinc-500 rounded-full"
+              style={{ borderTop: "1px dashed #71717a" }}
+            />
             <span>Daily</span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -84,69 +122,114 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
       </div>
 
       {weightData.length >= 7 ? (
-        <div className="h-[200px] md:h-[260px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={weightData}
-              margin={{ top: 10, right: 15, left: 15, bottom: 10 }}
-            >
-              <CartesianGrid
-                stroke="rgba(255,255,255,0.06)"
-                vertical={false}
-                strokeDasharray="3 3"
-              />
+        <div className="space-y-4">
+          <div className="h-[200px] md:h-[260px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={filteredData}
+                margin={{ top: 10, right: 15, left: 15, bottom: 10 }}
+              >
+                <CartesianGrid
+                  stroke="rgba(255,255,255,0.06)"
+                  vertical={false}
+                  strokeDasharray="3 3"
+                />
 
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
-                tick={{ fill: "#94A3B8", fontSize: 9, dy: 8 }}
-                interval={6}
-              />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+                  tick={{ fill: "#94A3B8", fontSize: 9, dy: 8 }}
+                  interval="preserveStartEnd"
+                />
 
-              <YAxis
-                domain={[minWeight, maxWeight]}
-                width={50}
-                tickLine={false}
-                axisLine={false}
-                tick={{ fill: "#94A3B8", fontSize: 9, dx: -6 }}
-                unit={` ${weightUnit}`}
-              />
+                <YAxis
+                  domain={[minWeight, maxWeight]}
+                  width={60}
+                  tickLine={false}
+                  axisLine={false}
+                  tick={({ x, y, payload }) => (
+                    <text x={x} y={y} dy={3} fill="#94A3B8" fontSize={9} textAnchor="end">
+                      {payload.value} {weightUnit}
+                    </text>
+                  )}
+                />
 
-              <Tooltip content={<CustomWeightTooltip weightUnit={weightUnit} />} />
+                <Tooltip
+                  content={<CustomWeightTooltip weightUnit={weightUnit} />}
+                />
 
-              <Line
-                type="monotone"
-                dataKey="weight"
-                name="Daily Weight"
-                stroke="rgba(255,255,255,0.25)"
-                strokeWidth={1.5}
-                strokeDasharray="3 3"
-                dot={{ fill: "#94A3B8", r: 2.5, strokeWidth: 0 }}
-                activeDot={{
-                  r: 5,
-                  fill: "#FFFFFF",
-                  stroke: "#F97316",
-                  strokeWidth: 2,
-                }}
-              />
+                <Line
+                  type="monotone"
+                  dataKey="weight"
+                  name="Daily Weight"
+                  stroke="rgba(255,255,255,0.25)"
+                  strokeWidth={1.5}
+                  strokeDasharray="3 3"
+                  dot={filteredData.length <= 30 ? { fill: "#94A3B8", r: 2.5, strokeWidth: 0 } : false}
+                  activeDot={{
+                    r: 5,
+                    fill: "#FFFFFF",
+                    stroke: "#F97316",
+                    strokeWidth: 2,
+                  }}
+                />
 
-              <Line
-                type="monotone"
-                dataKey="rollingAvg"
-                name="7-Day Trend"
-                stroke="#F97316"
-                strokeWidth={3}
-                dot={false}
-                activeDot={{
-                  r: 6,
-                  fill: "#F97316",
-                  stroke: "#FFFFFF",
-                  strokeWidth: 2,
-                }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+                <Line
+                  type="monotone"
+                  dataKey="rollingAvg"
+                  name="7-Day Trend"
+                  stroke="#F97316"
+                  strokeWidth={3}
+                  dot={false}
+                  activeDot={{
+                    r: 6,
+                    fill: "#F97316",
+                    stroke: "#FFFFFF",
+                    strokeWidth: 2,
+                  }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-white/5">
+            <span className="text-[10px] uppercase font-mono tracking-widest text-zinc-500 font-semibold hidden sm:inline">
+              Time Horizon
+            </span>
+            <div className="w-full sm:w-auto flex justify-center">
+              <div className="w-full max-w-xs sm:max-w-none flex items-center bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl p-1 gap-1 shadow-lg shadow-black/20">
+                {RANGE_OPTIONS.map((r) => {
+                  const isSelected = selectedRange === r.id
+                  return (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => setSelectedRange(r.id)}
+                      className="relative flex-1 sm:flex-initial px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer select-none rounded-xl text-center"
+                    >
+                      {isSelected && (
+                        <motion.div
+                          layoutId="activeGlassTab"
+                          transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                          className="absolute inset-0 rounded-xl bg-orange-500/25 border border-orange-500/50 backdrop-blur-md shadow-lg shadow-orange-500/25"
+                        />
+                      )}
+                      <span
+                        className={`relative z-10 transition-colors ${
+                          isSelected
+                            ? "text-white font-bold drop-shadow-sm"
+                            : "text-zinc-400 hover:text-white/90"
+                        }`}
+                      >
+                        {r.label}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="h-[200px] md:h-[260px] flex items-center justify-center text-zinc-400 italic text-xs text-center border border-dashed border-white/10 rounded-xl">
@@ -156,4 +239,3 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
     </motion.div>
   )
 }
-

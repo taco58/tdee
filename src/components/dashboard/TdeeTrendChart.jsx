@@ -49,7 +49,34 @@ const CustomTdeeTooltip = ({ active, payload, label, formulaEstimate }) => {
   return null
 }
 
-export default function TdeeTrendChart({ tdeeData, formulaEstimate = 2050, weeksOfData = 4 }) {
+const RANGE_OPTIONS = [
+  { id: "4w", label: "4W", weeks: 4 },
+  { id: "8w", label: "8W", weeks: 8 },
+  { id: "12w", label: "12W", weeks: 12 },
+  { id: "all", label: "All", weeks: null },
+]
+
+export default function TdeeTrendChart({ tdeeData = [], formulaEstimate = 2050, weeksOfData = 4 }) {
+  const [selectedRange, setSelectedRange] = React.useState("all")
+
+  const selectedWeeks = RANGE_OPTIONS.find((r) => r.id === selectedRange)?.weeks
+  const filteredData = selectedWeeks ? tdeeData.slice(-selectedWeeks) : tdeeData
+
+  const tdeeValues = filteredData
+    .map((d) => d.tdee)
+    .filter((v) => typeof v === "number" && !isNaN(v) && v > 0)
+  const allValues =
+    typeof formulaEstimate === "number" && formulaEstimate > 0
+      ? [...tdeeValues, formulaEstimate]
+      : tdeeValues
+
+  const minY = allValues.length
+    ? Math.floor((Math.min(...allValues) - 50) / 50) * 50
+    : 1800
+  const maxY = allValues.length
+    ? Math.ceil((Math.max(...allValues) + 50) / 50) * 50
+    : 2300
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -78,71 +105,119 @@ export default function TdeeTrendChart({ tdeeData, formulaEstimate = 2050, weeks
       </div>
 
       {weeksOfData >= 2 ? (
-        <div className="h-[180px] md:h-[220px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={tdeeData}
-              margin={{ top: 10, right: 15, left: 15, bottom: 10 }}
-            >
-              <CartesianGrid
-                stroke="rgba(255,255,255,0.06)"
-                vertical={false}
-                strokeDasharray="3 3"
-              />
+        <div className="space-y-4">
+          <div className="h-[180px] md:h-[220px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={filteredData}
+                margin={{ top: 10, right: 15, left: 15, bottom: 10 }}
+              >
+                <CartesianGrid
+                  stroke="rgba(255,255,255,0.06)"
+                  vertical={false}
+                  strokeDasharray="3 3"
+                />
 
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
-                tick={{ fill: "#94A3B8", fontSize: 9, dy: 8 }}
-              />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+                  tick={{ fill: "#94A3B8", fontSize: 9, dy: 8 }}
+                  interval="preserveStartEnd"
+                />
 
-              <YAxis
-                domain={[2000, 2200]}
-                width={60}
-                tickLine={false}
-                axisLine={false}
-                tick={{ fill: "#94A3B8", fontSize: 9, dx: -6 }}
-                unit=" kcal"
-              />
+                <YAxis
+                  domain={[minY, maxY]}
+                  width={70}
+                  tickLine={false}
+                  axisLine={false}
+                  tick={({ x, y, payload }) => (
+                    <text x={x} y={y} dy={3} fill="#94A3B8" fontSize={9} textAnchor="end">
+                      {payload.value} kcal
+                    </text>
+                  )}
+                />
 
-              <Tooltip
-                content={<CustomTdeeTooltip formulaEstimate={formulaEstimate} />}
-              />
+                <Tooltip
+                  content={<CustomTdeeTooltip formulaEstimate={formulaEstimate} />}
+                />
 
-              <ReferenceLine
-                y={formulaEstimate}
-                stroke="rgba(255,255,255,0.3)"
-                strokeDasharray="4 4"
-                label={{
-                  value: `Formula Baseline (${formulaEstimate} kcal)`,
-                  fill: "rgba(255,255,255,0.5)",
-                  fontSize: 10,
-                  position: "top",
-                }}
-              />
+                <ReferenceLine
+                  y={formulaEstimate}
+                  stroke="rgba(255,255,255,0.3)"
+                  strokeDasharray="4 4"
+                  label={{
+                    value: `Formula Baseline (${formulaEstimate} kcal)`,
+                    fill: "rgba(255,255,255,0.5)",
+                    fontSize: 10,
+                    position: "top",
+                  }}
+                />
 
-              <Line
-                type="monotone"
-                dataKey="tdee"
-                name="Adapted TDEE"
-                stroke="#F97316"
-                strokeWidth={3}
-                dot={{
-                  fill: "#F97316",
-                  stroke: "#FFFFFF",
-                  strokeWidth: 2,
-                  r: 4,
-                }}
-                activeDot={{
-                  r: 7,
-                  fill: "#F97316",
-                  stroke: "#FFFFFF",
-                  strokeWidth: 2.5,
-                }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+                <Line
+                  type="monotone"
+                  dataKey="tdee"
+                  name="Adapted TDEE"
+                  stroke="#F97316"
+                  strokeWidth={3}
+                  dot={
+                    filteredData.length <= 30
+                      ? {
+                          fill: "#F97316",
+                          stroke: "#FFFFFF",
+                          strokeWidth: 2,
+                          r: 4,
+                        }
+                      : false
+                  }
+                  activeDot={{
+                    r: 7,
+                    fill: "#F97316",
+                    stroke: "#FFFFFF",
+                    strokeWidth: 2.5,
+                  }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-white/5">
+            <span className="text-[10px] uppercase font-mono tracking-widest text-zinc-500 font-semibold hidden sm:inline">
+              Adaptation Window
+            </span>
+            <div className="w-full sm:w-auto flex justify-center">
+              <div className="w-full max-w-xs sm:max-w-none flex items-center bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl p-1 gap-1 shadow-lg shadow-black/20">
+                {RANGE_OPTIONS.map((r) => {
+                  const isSelected = selectedRange === r.id
+                  return (
+                    <button
+                      key={r.id}
+                      type="button"
+                      onClick={() => setSelectedRange(r.id)}
+                      className="relative flex-1 sm:flex-initial px-4 py-1.5 text-xs font-medium transition-colors cursor-pointer select-none rounded-xl text-center"
+                    >
+                      {isSelected && (
+                        <motion.div
+                          layoutId="activeTdeeGlassTab"
+                          transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                          className="absolute inset-0 rounded-xl bg-orange-500/25 border border-orange-500/50 backdrop-blur-md shadow-lg shadow-orange-500/25"
+                        />
+                      )}
+                      <span
+                        className={`relative z-10 transition-colors ${
+                          isSelected
+                            ? "text-white font-bold drop-shadow-sm"
+                            : "text-zinc-400 hover:text-white/90"
+                        }`}
+                      >
+                        {r.label}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="h-[180px] md:h-[220px] flex items-center justify-center text-zinc-400 italic text-xs text-center border border-dashed border-white/10 rounded-xl">

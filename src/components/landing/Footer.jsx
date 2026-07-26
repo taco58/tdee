@@ -42,9 +42,6 @@ export default function Footer() {
 
           <div className="md:col-span-4">
             <h4 className="text-xs uppercase tracking-[0.15em] font-semibold text-white/40 mb-4">Info</h4>
-            <p className="text-sm text-white/50 leading-relaxed mb-3">
-              Built on the nSuns adaptive algorithm.
-            </p>
             <p className="text-xs text-white/35">
               Free to use. No credit card required.
             </p>
@@ -54,10 +51,10 @@ export default function Footer() {
         <div className="h-px bg-white/5 w-full mb-8" />
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/30">
-          <p>© 2025 Adaptive TDEE. All rights reserved.</p>
+          <p>2026 AdapTDEE. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>
