@@ -15,7 +15,7 @@ export async function getLogsData() {
 
   const { data: logs, error } = await supabase
     .from("logs")
-    .select("date, weight, calories")
+    .select("date, weight, calories, unit")
     .order("date", { ascending: true })
 
   if (error) {
@@ -100,6 +100,13 @@ function gapFill(week: any[], fallbackWeight: number, fallbackCalories: number) 
   return result
 }
 
+function convertUnits(weight: number, logUnit: string, profileUnit: string) {
+  if (logUnit === profileUnit) return weight
+  if (logUnit === "lbs" && profileUnit === "kg") return weight * 0.453592
+  if (logUnit === "kg" && profileUnit === "lbs") return weight / 0.453592
+  return weight
+}
+
 export async function mifflinStJeor(profile: any): Promise<number> {
   if (!profile) return 2050
   const startWeight = profile.init_weight || profile.start_weight || profile.weight || 150
@@ -140,7 +147,7 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
   const cleanedLogs = logs
     .map((l) => ({
       date: l.date,
-      weight: l.weight != null && !isNaN(parseFloat(l.weight)) ? parseFloat(l.weight) : null,
+      weight: l.weight != null && !isNaN(parseFloat(l.weight)) ? convertUnits(parseFloat(l.weight), l.unit, profile.units) : null,
       calories: l.calories != null && !isNaN(parseInt(l.calories, 10)) ? parseInt(l.calories, 10) : null,
     }))
     .filter((l) => l.date)

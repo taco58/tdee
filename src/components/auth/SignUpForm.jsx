@@ -4,6 +4,7 @@ import React, { useState, useActionState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
 import { signup } from "@/lib/auth/actions"
+import Link from "next/link"
 
 export function SignupForm({ className, ...props }) {
   const [password, setPassword] = useState("");
@@ -109,9 +110,9 @@ export function SignupForm({ className, ...props }) {
               </Button>
               <p className="text-center text-xs text-white/40">
                 Already have an account?{" "}
-                <a href="/login" className="text-[#F97316] hover:text-[#EA580C] font-normal transition-colors">
+                <Link href="/login" className="text-[#F97316] hover:text-[#EA580C] font-normal transition-colors">
                   Sign in
-                </a>
+                </Link>
               </p>
             </div>
           </div>
@@ -120,9 +121,14 @@ export function SignupForm({ className, ...props }) {
 
       <p className="px-6 text-center text-[10px] text-white/35 leading-relaxed">
         By clicking continue, you agree to our{" "}
-        <a href="#" className="hover:text-white transition-colors underline">Terms of Service</a>{" "}
+        <Link href="/terms" className="hover:text-white transition-colors underline">
+          Terms of Service
+        </Link>
+        {" "}
         and{" "}
-        <a href="#" className="hover:text-white transition-colors underline">Privacy Policy</a>.
+        <Link href="/privacy" className="hover:text-white transition-colors underline">
+          Privacy Policy
+        </Link>.
       </p>
     </div>
   )

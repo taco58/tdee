@@ -54,6 +54,7 @@ export async function createLogEntry(logData: any) {
         date: logData.date,
         weight: logData.weight ? parseFloat(logData.weight) : null,
         calories: logData.calories ? parseInt(logData.calories, 10) : null,
+        unit: logData.unit || "lbs",
       },
       { onConflict: "user_id,date" }
     )

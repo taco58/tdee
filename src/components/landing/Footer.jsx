@@ -23,11 +23,11 @@ export default function Footer() {
             <p className="text-sm text-white/45 leading-relaxed max-w-sm mb-6">
               Thermodynamic metabolic modeling that adapts to your changing biology. Simple tracking with direct calculations.
             </p>
-            <div className="flex gap-4 text-xs uppercase tracking-wider text-white/30 font-medium">
+            {/* <div className="flex gap-4 text-xs uppercase tracking-wider text-white/30 font-medium">
               <a href="#" className="hover:text-white transition-colors">Twitter</a>
               <a href="#" className="hover:text-white transition-colors">Instagram</a>
               <a href="#" className="hover:text-white transition-colors">Discord</a>
-            </div>
+            </div> */}
           </div>
 
           <div className="md:col-span-3">

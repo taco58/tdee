@@ -45,9 +45,6 @@ export default function SplitSections() {
             <p className="text-sm text-white/60 leading-relaxed font-light mb-8 max-w-md">
               Most calorie trackers guess your metabolism based on equations from the 1990s. Adaptive TDEE uses direct feedback, calculating your exact daily energy output by measuring bodyweight change rates relative to logged calorie intake.
             </p>
-            <a href="#how-it-works" className="text-xs uppercase tracking-[0.15em] font-semibold text-[#F97316] hover:text-[#EA580C] transition-colors">
-              Learn how it works &rarr;
-            </a>
           </motion.div>
 
           <motion.div

@@ -9,13 +9,13 @@ export default function StatGrid({ stats }) {
     {
       title: "AVG WEIGHT",
       value: stats.avgWeight != null ? `${stats.avgWeight}` : "N/A",
-      unit: stats.avgWeight != null ? "lb" : "",
+      unit: stats.avgWeight != null ? stats.unit : "",
       subtext: "7-day rolling average",
     },
     {
       title: "WEEKLY CHANGE",
       value: stats.daysLogged > 0 ? `${stats.weeklyDelta > 0 ? `+${stats.weeklyDelta}` : stats.weeklyDelta}` : "0.0",
-      unit: "lb",
+      unit: stats.unit,
       subtext: "vs last week",
       icon: TrendingDown,
       badge: stats.daysLogged > 0 ? (stats.weeklyDelta < 0 ? "Loss" : stats.weeklyDelta > 0 ? "Gain" : null) : null,

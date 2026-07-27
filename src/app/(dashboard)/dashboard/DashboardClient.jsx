@@ -112,8 +112,8 @@ export default function DashboardClient({
 
   const [isEditingToday, setIsEditingToday] = useState(false)
   const [logPanelOpen, setLogPanelOpen] = useState(false)
-  const [inputWeight, setInputWeight] = useState(`${stats.avgWeight ?? ""}`)
-  const [inputCalories, setInputCalories] = useState(`${stats.avgCalories ?? ""}`)
+  const [inputWeight, setInputWeight] = useState("")
+  const [inputCalories, setInputCalories] = useState("")
 
   const [selectedCalendarDay, setSelectedCalendarDay] = useState(null)
   const [editDayWeight, setEditDayWeight] = useState("")
@@ -179,7 +179,7 @@ export default function DashboardClient({
       <DashboardHeader profile={initialProfile} />
 
       <main className="relative z-10 max-w-[480px] mx-auto px-4 pt-6 md:max-w-[1200px] md:px-8 md:pt-8">
-        <div className="flex flex-col gap-6 md:grid md:grid-cols-[1fr_380px] md:gap-6 md:items-start">
+        <div className="flex flex-col gap-6 md:grid lg:grid-cols-[1fr_380px] lg:gap-6 lg:items-start">
           
           <div id="trend-charts" className="space-y-6 order-2 md:order-1 md:pb-12">
             <WeightTrendChart weightData={weightData} weightUnit={weightUnit} />

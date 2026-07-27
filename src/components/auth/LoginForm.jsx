@@ -4,6 +4,7 @@ import React, { useActionState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
 import { login } from "@/lib/auth/actions"
+import Link from "next/link"
 
 export default function LoginForm({ className, ...props }) {
   const [state, formAction, isPending] = useActionState(login, null);
@@ -51,12 +52,12 @@ export default function LoginForm({ className, ...props }) {
                 <label htmlFor="password" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold">
                   Password
                 </label>
-                <a
+                <Link
                   href="#"
                   className="text-[10px] text-[#F97316] hover:text-[#EA580C] transition-colors"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <input 
                 id="password" 
@@ -73,9 +74,9 @@ export default function LoginForm({ className, ...props }) {
               </Button>
               <p className="text-center text-xs text-white/40">
                 Don&apos;t have an account?{" "}
-                <a href="/signup" className="text-[#F97316] hover:text-[#EA580C] font-normal transition-colors">
+                <Link href="/signup" className="text-[#F97316] hover:text-[#EA580C] font-normal transition-colors">
                   Sign up
-                </a>
+                </Link>
               </p>
             </div>
           </div>
@@ -84,9 +85,14 @@ export default function LoginForm({ className, ...props }) {
 
       <p className="px-6 text-center text-[10px] text-white/35 leading-relaxed">
         By clicking continue, you agree to our{" "}
-        <a href="#" className="hover:text-white transition-colors underline">Terms of Service</a>{" "}
+        <Link href="/terms" className="hover:text-white transition-colors underline">
+          Terms of Service
+        </Link>
+        {" "}
         and{" "}
-        <a href="#" className="hover:text-white transition-colors underline">Privacy Policy</a>.
+        <Link href="/privacy" className="hover:text-white transition-colors underline">
+          Privacy Policy
+        </Link>.
       </p>
     </div>
   )

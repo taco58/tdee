@@ -123,7 +123,8 @@ export default function TdeeTrendChart({ tdeeData = [], formulaEstimate = 2050, 
                   tickLine={false}
                   axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
                   tick={{ fill: "#94A3B8", fontSize: 9, dy: 8 }}
-                  interval="preserveStartEnd"
+                  interval="preserveEnd"
+                  minTickGap = {10}
                 />
 
                 <YAxis
