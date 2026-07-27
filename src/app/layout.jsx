@@ -21,9 +21,47 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Adaptive TDEE | Smart Calorie & Metabolic Tracker",
-  description: "Track your true calorie maintenance (TDEE) automatically using bodyweight trends and calorie logging. Stop guessing, follow the thermodynamics.",
-};
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://adaptdee.xyz"),
+  title: {
+    default: "TDEE Calculator | Adaptive Maintenance Calorie & Metabolic Tracker",
+    template: "%s | AdapTDEE",
+  },
+  description:
+    "Calculate your Total Daily Energy Expenditure (TDEE) and track your true maintenance calories using daily weight trend smoothing and calorie logging.",
+  keywords: [
+    "TDEE calculator",
+    "adaptive TDEE",
+    "maintenance calorie calculator",
+    "metabolic rate tracker",
+    "macrofactor alternative",
+    "weight trend smoothing",
+    "calculate TDEE",
+  ],
+  authors: [{ name: "AdapTDEE Team" }],
+  openGraph: {
+    title: "TDEE Calculator | Adaptive Maintenance Calorie & Metabolic Tracker",
+    description:
+      "Stop guessing your maintenance calories. Calculate baseline TDEE and track your real adaptive expenditure over time.",
+    url: "https://adaptdee.xyz",
+    siteName: "AdapTDEE",
+    images: [
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+        alt: "AdapTDEE Logo",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "TDEE Calculator | Adaptive Maintenance Calorie Tracker",
+    description: "Calculate baseline TDEE and track your real adaptive expenditure dynamically.",
+    images: ["/logo.png"],
+  },
+}
 
 export default function RootLayout({ children }) {
   return (
