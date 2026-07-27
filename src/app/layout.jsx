@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Inter, Outfit, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable} ${geistMono.variable}`}>
       <body className="font-sans antialiased selection:bg-orange-500/30 selection:text-orange-200">{children}</body>
+      <Analytics />
     </html>
   );
 }
