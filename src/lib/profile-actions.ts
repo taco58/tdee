@@ -46,6 +46,22 @@ export async function createLogEntry(logData: any) {
     throw new Error("Unauthorized")
   }
 
+  const weight = logData.weight ? parseFloat(logData.weight) : null
+  const calories = logData.calories ? parseInt(logData.calories, 10) : null
+
+  if (weight === null && calories === null) {
+    const {error: deleteError } = await supabase
+      .from("logs")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("date", logData.date)
+
+    if (deleteError) {
+      return { success: false, error: deleteError.message }
+    }
+    return { success: true, deleted: true }
+  }
+
   const { data, error } = await supabase
     .from("logs")
     .upsert(

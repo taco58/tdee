@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 
 import { createClient } from '@/lib/supabase/server'
 
@@ -26,15 +27,29 @@ export async function login(prevState: any, formData: FormData) {
 export async function signup(prevState: any, formData: FormData) {
   const supabase = await createClient()
 
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  }
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
 
-  const { error } = await supabase.auth.signUp(data)
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${siteUrl}/auth/confirm?next=/info-form`,
+    },
+  })
 
   if (error) {
-    return {error: error.message}
+    return { error: error.message }
+  }
+
+  const cookieStore = await cookies()
+  cookieStore.set('signup_progress', 'true', { maxAge: 600, path: '/' })
+
+  if (data?.user && !data?.session) {
+    revalidatePath('/', 'layout')
+    redirect('/check-email')
   }
 
   revalidatePath('/', 'layout')
