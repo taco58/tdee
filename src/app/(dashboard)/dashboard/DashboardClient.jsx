@@ -19,7 +19,14 @@ const getLocalDateString = (d = new Date()) => {
   return `${year}-${month}-${day}`
 }
 
-const generateCalendarFromLogs = (logs = []) => {
+function convertUnits(weight, logUnit, profileUnit) {
+  if (logUnit === profileUnit) return Math.round(weight * 10) / 10                                                                     
+  if (logUnit === "lbs" && profileUnit === "kg") return Math.round(weight * 0.453592 * 10) / 10
+  if (logUnit === "kg" && profileUnit === "lbs") return Math.round((weight / 0.453592) * 10) / 10
+  return Math.round(weight * 10) / 10
+}
+
+const generateCalendarFromLogs = (logs = [], profileUnits) => {
   const days = []
   const today = new Date()
   const currentYear = today.getFullYear()
@@ -46,7 +53,7 @@ const generateCalendarFromLogs = (logs = []) => {
       isLogged,
       isToday: l.date === todayLocalStr,
       isFuture: false,
-      weight: l.weight != null ? l.weight.toString() : null,
+      weight: l.weight != null ? convertUnits(l.weight, l.unit, profileUnits).toString() : null,
       calories: l.calories != null ? l.calories.toString() : null,
     })
   })
@@ -100,8 +107,8 @@ export default function DashboardClient({
   const tdeeData = initialAdaptiveStats.tdeeHistory || []
 
   const calendarDays = React.useMemo(
-    () => generateCalendarFromLogs(initialLogs),
-    [initialLogs]
+    () => generateCalendarFromLogs(initialLogs, weightUnit),
+    [initialLogs, weightUnit]
   )
 
   const todayStr = getLocalDateString()
@@ -113,11 +120,12 @@ export default function DashboardClient({
   const [isEditingToday, setIsEditingToday] = useState(false)
   const [logPanelOpen, setLogPanelOpen] = useState(false)
   const [inputWeight, setInputWeight] = useState(
-    isLoggedToday ? initialLogs.find((l) => l.date === todayStr)?.weight : ""
+    isLoggedToday ? convertUnits(initialLogs.find((l) => l.date === todayStr)?.weight, initialLogs.find((l) => l.date === todayStr)?.unit, weightUnit) : ""
   )
   const [inputCalories, setInputCalories] = useState(
     isLoggedToday ? initialLogs.find((l) => l.date === todayStr)?.calories : ""
   )
+  
 
   const [selectedCalendarDay, setSelectedCalendarDay] = useState(null)
   const [editDayWeight, setEditDayWeight] = useState("")
@@ -135,6 +143,7 @@ export default function DashboardClient({
           date: dateStr,
           weight: inputWeight,
           calories: inputCalories,
+          unit: weightUnit,
         })
         if (res?.success) {
           router.refresh()
@@ -164,6 +173,7 @@ export default function DashboardClient({
         date: dateStr,
         weight: hasWeight ? editDayWeight : null,
         calories: hasCalories ? editDayCalories : null,
+        unit: weightUnit,
       })
       if (res?.success) {
         router.refresh()
@@ -214,6 +224,7 @@ export default function DashboardClient({
             <StatGrid stats={stats} />
 
             <LogTodaySection
+              key = {`${todayStr}-${weightUnit}`}
               isLoggedToday={isLoggedToday && !isEditingToday}
               setIsLoggedToday={() => setIsEditingToday(true)}
               logPanelOpen={logPanelOpen}
