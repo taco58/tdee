@@ -269,7 +269,7 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
     avgCalories: Math.round(latestAvgCal),
     daysLogged: validLoggedCount,
     confidence: Math.min(100, Math.round((validLoggedCount / 42) * 100)),
-    weeksOfData: Math.max(1, Math.ceil(dailyState.length / 7)),
+    weeksOfData: Math.floor(validLoggedCount / 7),
     formulaEstimate: formulaTDEE,
     units: userUnits,
     tdeeHistory,

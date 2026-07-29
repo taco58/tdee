@@ -56,7 +56,7 @@ const RANGE_OPTIONS = [
   { id: "all", label: "All", weeks: null },
 ]
 
-export default function TdeeTrendChart({ tdeeData = [], formulaEstimate = 2050, weeksOfData = 4 }) {
+export default function TdeeTrendChart({ tdeeData = [], formulaEstimate = 2050, weeksOfData = 0 }) {
   const [selectedRange, setSelectedRange] = React.useState("all")
 
   const selectedWeeks = RANGE_OPTIONS.find((r) => r.id === selectedRange)?.weeks
@@ -76,6 +76,8 @@ export default function TdeeTrendChart({ tdeeData = [], formulaEstimate = 2050, 
   const maxY = allValues.length
     ? Math.ceil((Math.max(...allValues) + 50) / 50) * 50
     : 2300
+
+  const hasEnoughData = weeksOfData >= 1 && tdeeData.length > 0
 
   return (
     <motion.div
@@ -104,7 +106,7 @@ export default function TdeeTrendChart({ tdeeData = [], formulaEstimate = 2050, 
         </div>
       </div>
 
-      {weeksOfData >= 2 ? (
+      {hasEnoughData ? (
         <div className="space-y-4">
           <div className="h-[180px] md:h-[220px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -221,8 +223,8 @@ export default function TdeeTrendChart({ tdeeData = [], formulaEstimate = 2050, 
           </div>
         </div>
       ) : (
-        <div className="h-[180px] md:h-[220px] flex items-center justify-center text-zinc-400 italic text-xs text-center border border-dashed border-white/10 rounded-xl">
-          Log at least 2 weeks of data to unlock TDEE adaptation history
+        <div className="h-[180px] md:h-[220px] flex items-center justify-center text-zinc-400 italic text-xs text-center border border-dashed border-white/10 rounded-xl px-4">
+          Log at least 7 days of data to unlock TDEE adaptation history
         </div>
       )}
     </motion.div>

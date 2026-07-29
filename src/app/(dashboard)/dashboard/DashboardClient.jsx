@@ -112,8 +112,12 @@ export default function DashboardClient({
 
   const [isEditingToday, setIsEditingToday] = useState(false)
   const [logPanelOpen, setLogPanelOpen] = useState(false)
-  const [inputWeight, setInputWeight] = useState("")
-  const [inputCalories, setInputCalories] = useState("")
+  const [inputWeight, setInputWeight] = useState(
+    isLoggedToday ? initialLogs.find((l) => l.date === todayStr)?.weight : ""
+  )
+  const [inputCalories, setInputCalories] = useState(
+    isLoggedToday ? initialLogs.find((l) => l.date === todayStr)?.calories : ""
+  )
 
   const [selectedCalendarDay, setSelectedCalendarDay] = useState(null)
   const [editDayWeight, setEditDayWeight] = useState("")
