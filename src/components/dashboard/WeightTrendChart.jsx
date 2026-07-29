@@ -233,7 +233,7 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
           </div>
         </div>
       ) : (
-        <div className="h-[200px] md:h-[260px] flex items-center justify-center text-zinc-400 italic text-xs text-center border border-dashed border-white/10 rounded-xl">
+        <div className="px-4 h-[200px] md:h-[260px] flex items-center justify-center text-zinc-400 italic text-xs text-center border border-dashed border-white/10 rounded-xl">
           Log at least 7 days to see your trend curve
         </div>
       )}
