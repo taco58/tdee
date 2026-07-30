@@ -33,7 +33,6 @@ export default function PrivacyPage() {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-3xl mx-auto px-6 py-16 md:py-24 space-y-12">
         <div className="space-y-4">
           <span className="text-[10px] uppercase font-mono tracking-widest text-[#F97316] font-semibold">

@@ -45,7 +45,13 @@ export async function signup(prevState: any, formData: FormData) {
   }
 
   const cookieStore = await cookies()
-  cookieStore.set('signup_progress', 'true', { maxAge: 600, path: '/' })
+  cookieStore.set('signup_progress', 'true', {
+    maxAge: 600,
+    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+  })
 
   if (data?.user && !data?.session) {
     revalidatePath('/', 'layout')
