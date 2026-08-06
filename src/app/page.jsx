@@ -1,5 +1,3 @@
-"use client"
-
 import Navbar from "@/components/landing/Navbar"
 import Hero from "@/components/landing/Hero"
 import HowItWorksSteps from "@/components/landing/HowItWorksSteps"
