@@ -26,10 +26,10 @@ export default function HowItWorksSteps() {
     <section id="how-it-works" className="relative py-28 px-6 border-t border-white/5 z-10">
       <div className="max-w-6xl mx-auto relative z-10 text-center">
         
-        <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-4">
+        <p className="eyebrow mb-4">
           HOW IT WORKS
         </p>
-        <h2 className="text-3xl md:text-5xl font-light text-white mb-16">
+        <h2 className="font-display text-3xl md:text-5xl font-light text-white mb-16 tracking-tight">
           Tracking that <span className="text-[#F97316] italic font-normal">actually</span> works.
         </h2>
 
@@ -43,10 +43,10 @@ export default function HowItWorksSteps() {
               viewport={{ once: true }}
               className="relative flex flex-col border-t border-white/10 pt-8"
             >
-              <div className="text-sm font-bold text-[#F97316] mb-3">
+              <div className="text-xs font-mono font-semibold text-[#F97316] mb-3 tracking-widest">
                 {step.num}
               </div>
-              <h3 className="text-base font-bold text-white mb-2">
+              <h3 className="font-display text-base font-bold text-white mb-2">
                 {step.title}
               </h3>
               <p className="text-xs text-white/50 leading-relaxed font-light">

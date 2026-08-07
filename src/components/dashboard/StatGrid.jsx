@@ -2,7 +2,6 @@
 
 import React from "react"
 import { motion } from "framer-motion"
-import { Scale, TrendingDown, Flame, Database } from "lucide-react"
 
 export default function StatGrid({ stats }) {
   const cards = [
@@ -17,7 +16,6 @@ export default function StatGrid({ stats }) {
       value: stats.daysLogged > 0 ? `${stats.weeklyDelta > 0 ? `+${stats.weeklyDelta}` : stats.weeklyDelta}` : "0.0",
       unit: stats.unit,
       subtext: "vs last week",
-      icon: TrendingDown,
       badge: stats.daysLogged > 0 ? (stats.weeklyDelta < 0 ? "Loss" : stats.weeklyDelta > 0 ? "Gain" : null) : null,
     },
     {
@@ -41,9 +39,7 @@ export default function StatGrid({ stats }) {
       transition={{ duration: 0.4, delay: 0.1 }}
       className="grid grid-cols-2 gap-2.5"
     >
-      {cards.map((card, idx) => {
-        const IconComponent = card.icon
-        return (
+      {cards.map((card, idx) => (
           <div
             key={idx}
             className="bg-[#0D0D0D] border border-white/5 rounded-2xl p-4 flex flex-col justify-between shadow-lg hover:border-white/10 transition-all group"
@@ -64,7 +60,7 @@ export default function StatGrid({ stats }) {
             </div>
 
             <div className="my-0.5">
-              <span className="text-xl font-bold tracking-tight tabular-nums text-white">
+              <span className="text-xl font-bold font-mono tracking-tight tabular-nums text-white">
                 {card.value}
               </span>
               <span className="text-[10px] font-medium text-zinc-400 ml-1">
@@ -74,8 +70,7 @@ export default function StatGrid({ stats }) {
 
             <p className="text-[10px] text-white/50 mt-0.5">{card.subtext}</p>
           </div>
-        )
-      })}
-    </motion.div>
+        ))}
+      </motion.div>
   )
 }

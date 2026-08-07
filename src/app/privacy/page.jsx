@@ -20,6 +20,7 @@ export default function PrivacyPage() {
               alt="AdapTDEE Logo"
               width={80}
               height={80}
+              style={{ width: "auto", height: "auto" }}
               className="rounded-full object-cover"
             />
           </Link>
@@ -91,7 +92,7 @@ export default function PrivacyPage() {
               4. Data Storage & Security
             </h2>
             <p>
-              All user data is stored securely in PostgreSQL databases hosted via Supabase, protected by enterprise-grade encryption and Row Level Security (RLS). This ensures that your log data can only ever be accessed by your authenticated account.
+              Your data is encrypted and stored in secure cloud infrastructure with strict access controls, ensuring that your account information and logs remain private and accessible only to you.
             </p>
           </section>
 
@@ -100,7 +101,7 @@ export default function PrivacyPage() {
               5. Third-Party Sharing
             </h2>
             <p>
-              We <strong className="text-white">never sell, rent, or trade</strong> your personal or health data to advertisers or data brokers. Third-party services are limited to essential infrastructure providers (such as Supabase for database hosting and authentication).
+              We <strong className="text-white">never sell, rent, or trade</strong> your personal or health data to third parties or advertisers. Data sharing is strictly limited to essential cloud infrastructure services required to run the platform securely.
             </p>
           </section>
 
@@ -118,14 +119,7 @@ export default function PrivacyPage() {
               7. Contact Us
             </h2>
             <p>
-              If you have any questions or privacy concerns, please contact our privacy team at{" "}
-              <a
-                href="mailto:privacy@adaptdee.com"
-                className="text-[#F97316] underline hover:text-orange-400"
-              >
-                privacy@adaptdee.com
-              </a>
-              .
+              If you have any questions or privacy concerns, please contact us <Link href="/contact" className="text-[#F97316] hover:underline">here</Link>.
             </p>
           </section>
         </div>

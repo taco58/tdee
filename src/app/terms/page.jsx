@@ -20,6 +20,7 @@ export default function TermsPage() {
               alt="AdapTDEE Logo"
               width={80}
               height={80}
+              style={{ width: "auto", height: "auto" }}
               className="rounded-full object-cover"
             />
           </Link>
@@ -119,14 +120,7 @@ export default function TermsPage() {
               8. Contact Us
             </h2>
             <p>
-              If you have any questions regarding these Terms of Service, please contact us at{" "}
-              <a
-                href="mailto:support@adaptdee.com"
-                className="text-[#F97316] underline hover:text-orange-400"
-              >
-                support@adaptdee.com
-              </a>
-              .
+              If you have any questions regarding these Terms of Service, please contact us <Link href="/contact" className="text-[#F97316] hover:underline">here</Link>.
             </p>
           </section>
         </div>

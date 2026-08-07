@@ -65,6 +65,7 @@ export default function ContactPage() {
               alt="AdapTDEE Logo"
               width={80}
               height={80}
+              style={{ width: "auto", height: "auto" }}
               className="rounded-full object-cover"
             />
           </Link>

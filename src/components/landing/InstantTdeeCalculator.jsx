@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState } from "react"
-import { Calculator, Flame, TrendingDown, TrendingUp, Sparkles, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import Link from "next/link"
 
@@ -33,18 +32,13 @@ export default function InstantTdeeCalculator() {
     <div className="w-full max-w-2xl mx-auto bg-[#0D0D0D] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl relative z-10 font-sans text-left my-8">
       
       <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-full bg-[#F97316]/10 border border-[#F97316]/30 flex items-center justify-center text-[#F97316]">
-            <Calculator className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-white tracking-wide uppercase font-mono">
-              Instant TDEE Calculator
-            </h3>
-            <p className="text-[11px] text-zinc-400">
-              Calculate baseline maintenance calories instantly
-            </p>
-          </div>
+        <div>
+          <h3 className="text-sm font-bold text-white tracking-wide uppercase font-mono">
+            Instant TDEE Calculator
+          </h3>
+          <p className="text-[11px] text-zinc-400">
+            Calculate baseline maintenance calories instantly
+          </p>
         </div>
 
         <div className="flex items-center bg-white/5 p-1 rounded-full border border-white/10 text-xs font-semibold">
@@ -143,31 +137,31 @@ export default function InstantTdeeCalculator() {
             
             {/* Maintenance */}
             <div className="p-3 bg-white/5 rounded-xl border border-white/5">
-              <span className="text-[9px] uppercase tracking-widest text-zinc-400 font-mono flex items-center justify-center gap-1">
-                <Flame className="w-3 h-3 text-[#F97316]" /> Maintenance TDEE
+              <span className="text-[9px] uppercase tracking-widest text-zinc-400 font-mono block text-center">
+                Maintenance TDEE
               </span>
-              <p className="text-2xl font-bold text-white tabular-nums mt-1">
-                {calculatedTdee.toLocaleString()} <span className="text-xs text-zinc-400 font-normal">kcal</span>
+              <p className="text-2xl font-bold font-mono text-white tabular-nums mt-1">
+                {calculatedTdee.toLocaleString()} <span className="text-xs text-zinc-400 font-normal font-sans">kcal</span>
               </p>
             </div>
 
             {/* Fat Loss */}
             <div className="p-3 bg-white/5 rounded-xl border border-white/5">
-              <span className="text-[9px] uppercase tracking-widest text-emerald-400 font-mono flex items-center justify-center gap-1">
-                <TrendingDown className="w-3 h-3 text-emerald-400" /> Fat Loss (-1 lb/wk)
+              <span className="text-[9px] uppercase tracking-widest text-emerald-400 font-mono block text-center">
+                Fat Loss (-1 lb/wk)
               </span>
-              <p className="text-2xl font-bold text-white tabular-nums mt-1">
-                {weightLossCalories.toLocaleString()} <span className="text-xs text-zinc-400 font-normal">kcal</span>
+              <p className="text-2xl font-bold font-mono text-white tabular-nums mt-1">
+                {weightLossCalories.toLocaleString()} <span className="text-xs text-zinc-400 font-normal font-sans">kcal</span>
               </p>
             </div>
 
             {/* Muscle Gain */}
             <div className="p-3 bg-white/5 rounded-xl border border-white/5">
-              <span className="text-[9px] uppercase tracking-widest text-sky-400 font-mono flex items-center justify-center gap-1">
-                <TrendingUp className="w-3 h-3 text-sky-400" /> Muscle Lean Bulk
+              <span className="text-[9px] uppercase tracking-widest text-sky-400 font-mono block text-center">
+                Muscle Lean Bulk
               </span>
-              <p className="text-2xl font-bold text-white tabular-nums mt-1">
-                {muscleGainCalories.toLocaleString()} <span className="text-xs text-zinc-400 font-normal">kcal</span>
+              <p className="text-2xl font-bold font-mono text-white tabular-nums mt-1">
+                {muscleGainCalories.toLocaleString()} <span className="text-xs text-zinc-400 font-normal font-sans">kcal</span>
               </p>
             </div>
 
@@ -176,16 +170,13 @@ export default function InstantTdeeCalculator() {
       )}
 
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#F97316]/10 border border-[#F97316]/30">
-        <div className="flex items-start gap-2.5">
-          <Sparkles className="w-5 h-5 text-[#F97316] shrink-0 mt-0.5" />
-          <p className="text-xs text-zinc-300 leading-relaxed">
-            <strong className="text-white">Static formulas are only a rough starting guess!</strong> Real human metabolism adapts continuously. Log daily scale weight & intake to track your real adaptive TDEE.
-          </p>
-        </div>
+        <p className="text-xs text-zinc-300 leading-relaxed">
+          <strong className="text-white">Static formulas are only a rough starting guess!</strong> Real human metabolism adapts continuously. Log daily scale weight & intake to track your real adaptive TDEE.
+        </p>
 
         <Link href="/signup" className="shrink-0 w-full md:w-auto">
           <Button className="w-full md:w-auto rounded-full bg-[#F97316] hover:bg-[#EA580C] text-white border-transparent px-5 py-2.5 text-xs font-bold uppercase tracking-wider shadow-none flex items-center justify-center gap-1.5 whitespace-nowrap">
-            Track Free <ArrowRight className="w-3.5 h-3.5" />
+            Track Free
           </Button>
         </Link>
       </div>

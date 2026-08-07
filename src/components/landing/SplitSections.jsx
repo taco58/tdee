@@ -36,10 +36,10 @@ export default function SplitSections() {
             viewport={{ once: true }}
             className="text-left"
           >
-            <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-4">
+            <p className="eyebrow mb-4">
               THE ALGORITHM
             </p>
-            <h2 className="text-3xl md:text-5xl font-light text-white mb-6 leading-tight">
+            <h2 className="font-display text-3xl md:text-5xl font-light text-white mb-6 leading-tight tracking-tight">
               The algorithm <span className="text-[#F97316] italic font-normal">behind</span> the number.
             </h2>
             <p className="text-sm text-white/60 leading-relaxed font-light mb-8 max-w-md">

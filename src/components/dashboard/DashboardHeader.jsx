@@ -52,6 +52,7 @@ export default function DashboardHeader({ profile }) {
             alt="Logo"
             width={64}
             height={64}
+            style={{ width: "auto", height: "auto" }}
             className="rounded-full object-cover shrink-0 filter brightness-110"
           />
         </Link>

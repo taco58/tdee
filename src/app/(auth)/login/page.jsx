@@ -1,4 +1,3 @@
-import { dmSans } from "@/components/ui/Fonts"
 import LoginForm from "@/components/auth/LoginForm"
 import Image from "next/image"
 import Link from "next/link"
@@ -6,7 +5,7 @@ import Link from "next/link"
 export default function LoginPage() {
   return (
     <main
-      className={`min-h-screen bg-[#0A0A0F] text-white selection:bg-orange-500/30 flex items-center justify-center p-6 md:p-10 ${dmSans.className}`}
+      className="min-h-screen bg-[#0A0A0F] text-white selection:bg-orange-500/30 flex items-center justify-center p-6 md:p-10"
     >
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[500px] max-h-[500px] bg-[#F97316]/5 rounded-full blur-[100px] pointer-events-none z-0" />
 
@@ -18,6 +17,7 @@ export default function LoginPage() {
               alt="Logo" 
               width={100} 
               height={100} 
+              style={{ width: "auto", height: "auto" }}
               className="rounded-full object-cover shrink-0 filter brightness-110" 
             />
           </button>

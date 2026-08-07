@@ -14,10 +14,10 @@ export default function LoginForm({ className, ...props }) {
       <div className="bg-[#0D0D0D] border border-white/5 rounded-2xl p-6 md:p-8 w-full text-left">
         
         <div className="mb-8">
-          <p className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-2">
+          <p className="eyebrow mb-2">
             LOGIN
           </p>
-          <h2 className="text-2xl font-light text-white leading-tight">
+          <h2 className="font-display text-2xl font-light text-white leading-tight tracking-tight">
             Welcome <span className="text-[#F97316] italic font-normal">back</span>.
           </h2>
           <p className="text-xs text-white/40 mt-1">
@@ -26,7 +26,7 @@ export default function LoginForm({ className, ...props }) {
         </div>
 
         {state?.error && (
-          <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-xs text-red-400 font-medium">
+          <div className="mb-6 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-xs text-red-400 font-mono font-medium">
             {state.error}
           </div>
         )}
@@ -34,7 +34,7 @@ export default function LoginForm({ className, ...props }) {
         <form action={formAction}>
           <div className="flex flex-col gap-5">
             <div className="flex flex-col">
-              <label htmlFor="email" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold mb-2">
+              <label htmlFor="email" className="text-[9px] uppercase tracking-[0.18em] font-mono text-white/50 font-semibold mb-2">
                 Email Address
               </label>
               <input
@@ -49,7 +49,7 @@ export default function LoginForm({ className, ...props }) {
 
             <div className="flex flex-col">
               <div className="flex justify-between items-center mb-2">
-                <label htmlFor="password" className="text-[9px] uppercase tracking-[0.15em] text-white/50 font-bold">
+                <label htmlFor="password" className="text-[9px] uppercase tracking-[0.18em] font-mono text-white/50 font-semibold">
                   Password
                 </label>
                 <Link

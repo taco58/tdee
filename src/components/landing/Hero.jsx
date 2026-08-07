@@ -3,7 +3,6 @@
 import React from "react"
 import { motion } from "framer-motion"
 import { Button } from "../ui/Button"
-import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 import InstantTdeeCalculator from "./InstantTdeeCalculator"
@@ -19,10 +18,10 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-4">
+          <p className="eyebrow mb-4">
             SMART METABOLIC FEEDBACK LOOP
           </p>
-          <h1 className="text-4xl md:text-7xl font-light tracking-tight text-white mb-6 leading-[1.1]">
+          <h1 className="font-display text-4xl md:text-7xl font-light tracking-tight text-white mb-6 leading-[1.08]">
             The Adaptive <br />
             <span className="text-[#F97316] italic font-normal">TDEE Calculator</span>
           </h1>

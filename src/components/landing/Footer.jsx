@@ -17,6 +17,7 @@ export default function Footer() {
                 alt="Logo" 
                 width={36} 
                 height={36} 
+                style={{ width: "auto", height: "auto" }}
                 className="rounded-full object-cover shrink-0"
               />
             </Link>
@@ -31,7 +32,7 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-3">
-            <h4 className="text-xs uppercase tracking-[0.15em] font-semibold text-white/40 mb-4">Nav</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.2em] font-mono font-semibold text-[#F97316]/70 mb-4">Navigation</h4>
             <ul className="flex flex-col gap-3 text-sm text-white/60">
               <li><a href="#how-it-works" className="hover:text-white transition-colors">How it works</a></li>
               <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
@@ -41,7 +42,7 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-4">
-            <h4 className="text-xs uppercase tracking-[0.15em] font-semibold text-white/40 mb-4">Info</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.2em] font-mono font-semibold text-[#F97316]/70 mb-4">Platform</h4>
             <p className="text-xs text-white/35">
               Free to use. No credit card required.
             </p>
@@ -51,7 +52,7 @@ export default function Footer() {
         <div className="h-px bg-white/5 w-full mb-8" />
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-white/30">
-          <p>2026 AdapTDEE. All rights reserved.</p>
+          <p className="font-mono text-[11px]">© 2026 AdapTDEE. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>

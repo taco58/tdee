@@ -65,8 +65,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable} ${geistMono.variable}`}>
-      <body className="font-sans antialiased selection:bg-orange-500/30 selection:text-orange-200">{children}</body>
+    <html lang="en" className={`${inter.variable} ${outfit.variable} ${geistMono.variable}`} suppressHydrationWarning>
+      <body className="font-sans antialiased selection:bg-orange-500/30 selection:text-orange-200" suppressHydrationWarning>{children}</body>
       <Analytics />
     </html>
   );

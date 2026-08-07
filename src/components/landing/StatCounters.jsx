@@ -32,7 +32,7 @@ export default function StatCounters() {
               viewport={{ once: true }}
               className="flex flex-col items-center md:items-start"
             >
-              <div className="text-5xl md:text-6xl font-bold text-[#F97316] mb-4 tracking-tight">
+              <div className="font-display text-5xl md:text-6xl font-bold text-[#F97316] mb-4 tracking-tight">
                 {stat.num}
               </div>
               <p className="text-sm md:text-[15px] text-white/50 leading-relaxed max-w-[220px]">
