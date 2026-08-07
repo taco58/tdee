@@ -1,8 +1,9 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { revalidatePath } from "next/cache"
 
-export async function saveProfile(profileData: any) {
+export async function getProfile() {
   const supabase = await createClient()
 
   const {
@@ -15,6 +16,33 @@ export async function saveProfile(profileData: any) {
 
   const { data, error } = await supabase
     .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single()
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+
+  return { success: true, data }
+}
+
+export async function saveProfile(profileData: any) {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return { success: false, error: "Unauthorized" }
+  }
+
+  const rawActivity = parseFloat(profileData.activityLevel)
+  const activityVal = (!isNaN(rawActivity) && rawActivity > 0) ? rawActivity : 1.2
+
+  const { data, error } = await supabase
+    .from("profiles")
     .upsert({
       id: user.id,
       name: profileData.firstName,
@@ -22,7 +50,7 @@ export async function saveProfile(profileData: any) {
       age: parseInt(profileData.age, 10),
       sex: profileData.gender,
       height_cm: parseFloat(profileData.heightCm),
-      activity: profileData.activityLevel,
+      activity: activityVal,
       init_weight: parseFloat(profileData.init_weight || profileData.startWeight || profileData.weight),
     })
     .select()
@@ -31,6 +59,10 @@ export async function saveProfile(profileData: any) {
     console.error("DB Error:", error.message)
     return { success: false, error: error.message }
   }
+
+  revalidatePath("/dashboard")
+  revalidatePath("/info-form")
+  revalidatePath("/", "layout")
 
   return { success: true, data }
 }

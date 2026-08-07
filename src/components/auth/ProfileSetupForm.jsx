@@ -1,19 +1,31 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/Button"
 
-export default function ProfileSetupForm({ onSubmitSuccess }) {
-  const [firstName, setFirstName] = useState("")
-  const [weight, setWeight] = useState("")
-  const [weightUnit, setWeightUnit] = useState("lbs")
-  const [height, setHeight] = useState("")
-  const [age, setAge] = useState("")
-  const [gender, setGender] = useState("female")
-  const [activityLevel, setActivityLevel] = useState(0)
+export default function ProfileSetupForm({ onSubmitSuccess, initialData }) {
+  const [firstName, setFirstName] = useState(initialData?.name || "")
+  const [weight, setWeight] = useState(initialData?.init_weight || initialData?.weight || "")
+  const [weightUnit, setWeightUnit] = useState(initialData?.units || "lbs")
+  const [height, setHeight] = useState(initialData?.height_cm || "")
+  const [age, setAge] = useState(initialData?.age || "")
+  const [gender, setGender] = useState(initialData?.sex || "female")
+  const [activityLevel, setActivityLevel] = useState(initialData?.activity || 1.2)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [message, setMessage] = useState("")
+
+  useEffect(() => {
+    if (initialData) {
+      if (initialData.name) setFirstName(initialData.name)
+      if (initialData.init_weight || initialData.weight) setWeight(initialData.init_weight || initialData.weight)
+      if (initialData.units) setWeightUnit(initialData.units)
+      if (initialData.height_cm) setHeight(initialData.height_cm)
+      if (initialData.age) setAge(initialData.age)
+      if (initialData.sex) setGender(initialData.sex)
+      if (initialData.activity != null) setActivityLevel(initialData.activity)
+    }
+  }, [initialData])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -226,6 +238,7 @@ export default function ProfileSetupForm({ onSubmitSuccess }) {
               backgroundRepeat: `no-repeat`,
             }}
           >
+            <option value={1.0}>Sickly / Bedridden — Minimal movement, illness recovery, or bed rest</option>
             <option value={1.2}>Sedentary — &lt; 5,000 steps/day · Desk job, no formal exercise</option>
             <option value={1.375}>Lightly Active — 5,000–7,500 steps/day · Light exercise 1–3 days/wk</option>
             <option value={1.55}>Moderately Active — 7,500–10,000 steps/day · Moderate exercise 3–5 days/wk</option>

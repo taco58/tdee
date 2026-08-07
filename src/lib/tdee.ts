@@ -113,7 +113,8 @@ export async function mifflinStJeor(profile: any): Promise<number> {
   const weightKg = (profile.units === "lbs" || !profile.units) ? startWeight * 0.453592 : startWeight
   const heightCm = profile.height_cm || 175
   const age = profile.age || 25
-  const activity = parseFloat(profile.activity) || 1.375
+  const rawActivity = parseFloat(profile.activity)
+  const activity = (!isNaN(rawActivity) && rawActivity > 0) ? rawActivity : 1.2
   const genderBonus = profile.sex === "female" ? -161 : 5
 
   return Math.round(activity * (10 * weightKg + 6.25 * heightCm - 5 * age + genderBonus))

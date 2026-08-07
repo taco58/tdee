@@ -1,15 +1,26 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import ProfileSetupForm from "@/components/auth/ProfileSetupForm"
-import { saveProfile } from "@/lib/profile-actions"
+import { saveProfile, getProfile } from "@/lib/profile-actions"
 import Image from "next/image"
 import Link from "next/link"
 
 export default function InfoFormPage() {
   const router = useRouter()
   const [error, setError] = useState("")
+  const [existingProfile, setExistingProfile] = useState(null)
+
+  useEffect(() => {
+    async function loadData() {
+      const res = await getProfile()
+      if (res.success && res.data) {
+        setExistingProfile(res.data)
+      }
+    }
+    loadData()
+  }, [])
 
   const handleSuccess = async (data) => {
     setError("")
@@ -18,6 +29,7 @@ export default function InfoFormPage() {
 
     if (result.success) {
       router.push("/dashboard")
+      router.refresh()
     } else {
       setError(
         result.error || "An error occurred while saving your profile data.",
@@ -52,7 +64,7 @@ export default function InfoFormPage() {
           </button>
         </Link>
 
-        <ProfileSetupForm onSubmitSuccess={handleSuccess} />
+        <ProfileSetupForm onSubmitSuccess={handleSuccess} initialData={existingProfile} />
       </div>
     </main>
   )

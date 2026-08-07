@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -17,10 +17,8 @@ export default function TdeeCalculator() {
   const [heightCm, setHeightCm] = useState(175);
   const [activity, setActivity] = useState(1.375);
 
-  const [tdee, setTdee] = useState(2400);
-  const [bmr, setBmr] = useState(1700);
-
   const activityLevels = [
+    { value: 1.0, label: 'Sickly / Bedridden', desc: 'Minimal movement, illness recovery, or bed rest' },
     { value: 1.2, label: 'Sedentary', desc: 'Desk job, little to no exercise' },
     { value: 1.375, label: 'Lightly Active', desc: 'Light exercise 1-3 days/week' },
     { value: 1.55, label: 'Moderately Active', desc: 'Moderate exercise 3-5 days/week' },
@@ -28,28 +26,24 @@ export default function TdeeCalculator() {
     { value: 1.9, label: 'Extra Active', desc: 'Physical job or elite athlete' }
   ];
 
-  useEffect(() => {
-    let wKg = unit === 'imperial' ? weight * 0.45359237 : weight;
-    let hCm = heightCm;
-    if (unit === 'imperial') {
-      const totalInches = heightFt * 12 + heightIn;
-      hCm = totalInches * 2.54;
-    }
+  let wKg = unit === 'imperial' ? weight * 0.45359237 : weight;
+  let hCm = heightCm;
+  if (unit === 'imperial') {
+    const totalInches = heightFt * 12 + heightIn;
+    hCm = totalInches * 2.54;
+  }
 
-    if (wKg <= 0 || hCm <= 0 || age <= 0) return;
-
-    let bmrVal = 0;
+  let rawBmr = 0;
+  if (wKg > 0 && hCm > 0 && age > 0) {
     if (gender === 'male') {
-      bmrVal = 10 * wKg + 6.25 * hCm - 5 * age + 5;
+      rawBmr = 10 * wKg + 6.25 * hCm - 5 * age + 5;
     } else {
-      bmrVal = 10 * wKg + 6.25 * hCm - 5 * age - 161;
+      rawBmr = 10 * wKg + 6.25 * hCm - 5 * age - 161;
     }
+  }
 
-    const tdeeVal = bmrVal * activity;
-
-    setBmr(Math.round(bmrVal));
-    setTdee(Math.round(tdeeVal));
-  }, [gender, unit, age, weight, heightFt, heightIn, heightCm, activity]);
+  const bmr = Math.round(rawBmr);
+  const tdee = Math.round(rawBmr * activity);
 
   return (
     <section id="calculator" className="relative py-20 px-6 bg-[#242424]">
