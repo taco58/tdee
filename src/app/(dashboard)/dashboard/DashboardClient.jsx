@@ -233,9 +233,7 @@ export default function DashboardClient({
 
           <div className="space-y-6 order-1 md:order-2 md:sticky md:top-24 md:h-fit mb-6 md:mb-0">
             <HeroStat stats={stats} />
-
-            <StatGrid stats={stats} />
-
+            
             <LogTodaySection
               key = {`${todayStr}-${weightUnit}`}
               isLoggedToday={isLoggedToday && !isEditingToday}
@@ -249,6 +247,8 @@ export default function DashboardClient({
               onSaveTodayLog={handleSaveTodayLog}
               weightUnit={weightUnit}
             />
+
+            <StatGrid stats={stats} />
           </div>
 
         </div>
