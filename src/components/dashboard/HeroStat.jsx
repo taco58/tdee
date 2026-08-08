@@ -32,6 +32,9 @@ export default function HeroStat({ stats }) {
 
       <p className="text-[11px] text-zinc-400 mt-2 font-sans">
         Based on <span className="text-zinc-200 font-semibold">{stats.weeksOfData} weeks</span> of metabolic data
+        <br />
+        Keep going! More data will improve your estimate
+
       </p>
     </motion.div>
   )
