@@ -27,6 +27,7 @@ export default function SplitSections() {
         />
       </div>
 
+      {/* Section 1: Adaptive Model Overview */}
       <section className="relative z-10 py-28 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
           <motion.div
@@ -37,14 +38,25 @@ export default function SplitSections() {
             className="text-left"
           >
             <p className="eyebrow mb-4">
-              THE ALGORITHM
+              ADAPTIVE METABOLIC ENGINE
             </p>
             <h2 className="font-display text-3xl md:text-5xl font-light text-white mb-6 leading-tight tracking-tight">
-              The algorithm <span className="text-[#F97316] italic font-normal">behind</span> the number.
+              Beyond simple <span className="text-[#F97316] italic font-normal">calculators</span>.
             </h2>
             <p className="text-sm text-white/60 leading-relaxed font-light mb-8 max-w-md">
-              Most calorie trackers guess your metabolism based on equations from the 1990s. Adaptive TDEE uses direct feedback, calculating your exact daily energy output by measuring bodyweight change rates relative to logged calorie intake.
+              Basic online tools rely on static 1990s estimates. Our multi-variable feedback system continuously aligns your target intake with actual bodyweight trends.
             </p>
+
+            <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-6 max-w-md">
+              <div>
+                <span className="text-[#F97316] text-xs font-semibold block mb-1">Signal Noise Filtering</span>
+                <span className="text-white/40 text-[11px] font-light leading-snug block">Eliminates water weight anomalies</span>
+              </div>
+              <div>
+                <span className="text-[#F97316] text-xs font-semibold block mb-1">Continuous Recalibration</span>
+                <span className="text-white/40 text-[11px] font-light leading-snug block">Auto-adjusts as metabolism shifts</span>
+              </div>
+            </div>
           </motion.div>
 
           <motion.div
@@ -59,6 +71,7 @@ export default function SplitSections() {
         </div>
       </section>
 
+      {/* Section 2: Clean Engine Architecture Card */}
       <section className="relative py-28 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
 
@@ -69,14 +82,53 @@ export default function SplitSections() {
             viewport={{ once: true }}
             className="flex justify-center order-2 md:order-1"
           >
-            <div className="w-full max-w-md bg-[#0D0D0D] border border-white/5 p-8 flex flex-col justify-center items-center text-center font-mono select-none">
-              <span className="text-[11px] text-white/30 uppercase tracking-[0.15em] mb-4">Metabolic Balance Equation</span>
-              <div className="text-base md:text-lg text-white font-light tracking-wide px-4 py-6 border border-white/10 w-full rounded">
-                TDEE = avg_cal − <span className="text-[#F97316]">(Δwt × 3500 / 7)</span>
+            <div className="w-full max-w-lg bg-[#0D0D12] border border-white/10 p-7 rounded-2xl flex flex-col select-none shadow-2xl relative">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+                <span className="eyebrow text-[#F97316]">
+                  ADAPTIVE ENGINE SPEC
+                </span>
+                <span className="text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-mono">
+                  ACTIVE
+                </span>
               </div>
-              <span className="text-[10px] text-white/30 mt-4 leading-relaxed max-w-[280px]">
-                Thermodynamics in action: your expenditure is equal to intake minus the energy stored or lost as tissue.
-              </span>
+
+              {/* Module 1: Noise Filter */}
+              <div className="mb-4 bg-black/40 p-4 rounded-xl border border-white/5 flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-semibold text-white mb-0.5">Signal Noise & Water Weight Filter</h4>
+                  <p className="text-[11px] text-white/40 font-light">Dampens daily sodium & fluid fluctuations</p>
+                </div>
+                <span className="text-[10px] font-mono text-[#F97316] bg-[#F97316]/10 px-2.5 py-1 rounded border border-[#F97316]/20">
+                  SMOOTHED
+                </span>
+              </div>
+
+              {/* Module 2: Rate of Change Differential */}
+              <div className="mb-4 bg-black/40 p-4 rounded-xl border border-white/5 flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-semibold text-white mb-0.5">Energy Balance Differential</h4>
+                  <p className="text-[11px] text-white/40 font-light">Calculates true scale mass velocity</p>
+                </div>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/20">
+                  REAL-TIME
+                </span>
+              </div>
+
+              {/* Module 3: Confidence & Calibration */}
+              <div className="bg-black/40 p-4 rounded-xl border border-white/5 flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-semibold text-white mb-0.5">Dynamic Confidence Matrix</h4>
+                  <p className="text-[11px] text-white/40 font-light">Auto-weights data density & logging history</p>
+                </div>
+                <span className="text-[10px] font-mono text-white/60 bg-white/5 px-2.5 py-1 rounded border border-white/10">
+                  PRECISION
+                </span>
+              </div>
+
+              <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-white/40 font-light">
+                <span>Multi-variable feedback loop</span>
+                <span className="text-[#F97316]">Dynamic calibration</span>
+              </div>
             </div>
           </motion.div>
 
@@ -87,14 +139,14 @@ export default function SplitSections() {
             viewport={{ once: true }}
             className="text-left order-1 md:order-2"
           >
-            <p className="text-[11px] uppercase tracking-[0.2em] font-semibold text-[#F97316] mb-4">
-              YOUR RESULTS
+            <p className="eyebrow mb-4">
+              EMPIRICAL PRECISION
             </p>
-            <h2 className="text-3xl md:text-5xl font-light text-white mb-6 leading-tight">
-              Science, <span className="text-[#F97316] italic font-normal">not</span> guesswork.
+            <h2 className="font-display text-3xl md:text-5xl font-light text-white mb-6 leading-tight tracking-tight">
+              Science, <span className="text-[#F97316] italic font-normal">not</span> estimation.
             </h2>
             <p className="text-sm text-white/60 leading-relaxed font-light mb-8 max-w-md">
-              Online calculators are off by up to 500 kcal daily. By monitoring trends over a multi-day window, our system bypasses water retention errors, providing a precise roadmap tailored to your specific metabolic changes.
+              Static equations miss real-world metabolic adaptation and activity shifts. By continuously solving your body's energy balance over a rolling window, our system adapts directly to you.
             </p>
             <Link href="/signup">
               <Button className="rounded-full bg-[#F97316] hover:bg-[#EA580C] text-white border-transparent px-6 py-3 text-xs uppercase tracking-[0.1em] font-semibold shadow-none">
@@ -107,4 +159,3 @@ export default function SplitSections() {
     </div>
   );
 }
-
