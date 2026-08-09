@@ -46,3 +46,5 @@ next-env.d.ts
 .antigravitycli/
 .gemini/
 .vscode/
+AGENTS.MD
+CLAUDE.MD
