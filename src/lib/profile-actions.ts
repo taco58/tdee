@@ -115,3 +115,46 @@ export async function createLogEntry(logData: any) {
 
   return { success: true, data }
 }
+
+export async function importBatchLogEntries(entries: Array<{ date: string; weight?: number | null; calories?: number | null; unit?: string }>) {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return { success: false, error: "Unauthorized" }
+  }
+
+  if (!entries || entries.length === 0) {
+    return { success: false, error: "No entries provided" }
+  }
+
+  const rowsToUpsert = entries
+    .filter((e) => e.date && (e.weight != null || e.calories != null))
+    .map((e) => ({
+      user_id: user.id,
+      date: e.date,
+      weight: e.weight != null && !isNaN(parseFloat(e.weight.toString())) ? parseFloat(e.weight.toString()) : null,
+      calories: e.calories != null && !isNaN(parseInt(e.calories.toString(), 10)) ? parseInt(e.calories.toString(), 10) : null,
+      unit: e.unit || "lbs",
+    }))
+
+  if (rowsToUpsert.length === 0) {
+    return { success: false, error: "No valid entries found to import" }
+  }
+
+  const { data, error } = await supabase
+    .from("logs")
+    .upsert(rowsToUpsert, { onConflict: "user_id,date" })
+    .select()
+
+  if (error) {
+    console.error("Batch DB Import Error:", error.message)
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath("/dashboard")
+  return { success: true, count: rowsToUpsert.length, data }
+}

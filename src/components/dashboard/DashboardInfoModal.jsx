@@ -129,6 +129,29 @@ export default function DashboardInfoModal({ isOpen, onClose }) {
               </div>
             </div>
 
+            {/* Section 4 */}
+            <div>
+              <span className="text-xs font-mono font-semibold text-[#F97316] uppercase tracking-widest block mb-2">
+                04 · CSV Data Backup & Transfer
+              </span>
+              <h3 className="font-display text-base font-bold text-white mb-2">
+                Importing & Exporting Your Logs
+              </h3>
+              <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-3">
+                You own your fitness data. Use the CSV controls in your dashboard or profile menu to backup or migrate logs at any time:
+              </p>
+              <ul className="space-y-2 text-xs sm:text-sm text-zinc-400">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#F97316] font-mono font-bold">•</span>
+                  <span><strong>Export CSV:</strong> Download your entire logging history as a standard `.csv` spreadsheet for backup or personal tracking.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#F97316] font-mono font-bold">•</span>
+                  <span><strong>Import CSV:</strong> Upload historical weight and calorie logs from MyFitnessPal, MacroFactor, or custom spreadsheets. The auto-detector maps `Date`, `Weight`, and `Calories` columns automatically.</span>
+                </li>
+              </ul>
+            </div>
+
           </div>
 
           {/* Footer */}

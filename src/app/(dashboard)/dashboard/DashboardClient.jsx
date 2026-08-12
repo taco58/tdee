@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 import DashboardHeader from "@/components/dashboard/DashboardHeader"
+import AnnouncementBanner from "@/components/dashboard/AnnouncementBanner"
 import HeroStat from "@/components/dashboard/HeroStat"
 import StatGrid from "@/components/dashboard/StatGrid"
 import WeightTrendChart from "@/components/dashboard/WeightTrendChart"
@@ -11,6 +12,7 @@ import TdeeTrendChart from "@/components/dashboard/TdeeTrendChart"
 import LogHistoryCalendar from "@/components/dashboard/LogHistoryCalendar"
 import LogTodaySection from "@/components/dashboard/LogTodaySection"
 import DashboardInfoModal from "@/components/dashboard/DashboardInfoModal"
+import CsvImportExportModal from "@/components/dashboard/CsvImportExport"
 import { createLogEntry } from "@/lib/profile-actions"
 
 const getLocalDateString = (d = new Date()) => {
@@ -187,6 +189,7 @@ export default function DashboardClient({
   }
 
   const [infoModalOpen, setInfoModalOpen] = useState(false)
+  const [csvModalOpen, setCsvModalOpen] = useState(false)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -203,7 +206,18 @@ export default function DashboardClient({
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-[#F97316]/5 rounded-full blur-[100px] pointer-events-none z-0" />
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none z-0" />
 
-      <DashboardHeader profile={initialProfile} onOpenInfoModal={() => setInfoModalOpen(true)} />
+      <AnnouncementBanner
+        id="csv_excel_v1"
+        title="New Feature"
+        message="You can now import and export CSV files directly from your profile menu!"
+        messageSm= "Import and export CSV files from your profile!"
+      />
+
+      <DashboardHeader
+        profile={initialProfile}
+        onOpenInfoModal={() => setInfoModalOpen(true)}
+        onOpenCsvModal={() => setCsvModalOpen(true)}
+      />
 
       <main className="relative z-10 max-w-[480px] mx-auto px-4 pt-6 md:max-w-[1200px] md:px-8 md:pt-8">
         <div className="flex flex-col gap-6 md:grid lg:grid-cols-[1fr_380px] lg:gap-6 lg:items-start">
@@ -255,7 +269,13 @@ export default function DashboardClient({
       </main>
 
       <DashboardInfoModal isOpen={infoModalOpen} onClose={() => setInfoModalOpen(false)} />
+
+      <CsvImportExportModal
+        isOpen={csvModalOpen}
+        onClose={() => setCsvModalOpen(false)}
+        logs={initialLogs}
+        weightUnit={weightUnit}
+      />
     </div>
   )
 }
-

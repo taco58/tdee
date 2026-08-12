@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react"
 import Link from "next/link"
-import { LogOut, User, ChevronDown, Book, Mail } from "lucide-react"
+import { LogOut, User, ChevronDown, Book, Mail, FileSpreadsheet } from "lucide-react"
 import { logout } from "@/lib/auth/actions"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
@@ -37,6 +37,14 @@ export default function DashboardHeader({ profile, onOpenInfoModal }) {
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
+
+  const handleScrollToCsv = () => {
+    setDropdownOpen(false)
+    const elem = document.getElementById("csv-management")
+    if (elem) {
+      elem.scrollIntoView({ behavior: "smooth" })
+    }
+  }
 
   return (
     <header
@@ -113,6 +121,14 @@ export default function DashboardHeader({ profile, onOpenInfoModal }) {
                       <span>Guide & Info</span>
                     </button>
                   )}
+
+                  <button
+                    onClick={handleScrollToCsv}
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors group cursor-pointer text-left"
+                  >
+                    <FileSpreadsheet className="w-4 h-4 text-zinc-400 transition-transform group-hover:scale-110" />
+                    <span>CSV Import / Export</span>
+                  </button>
 
                   <Link
                     href="/info-form"
