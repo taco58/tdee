@@ -38,8 +38,8 @@ export async function updateSession(request: NextRequest) {
       }
     )
 
-    const { data: claimsData } = await supabase.auth.getClaims()
-    const userId = claimsData?.claims?.sub
+    const { data: {user} } = await supabase.auth.getUser()
+    const userId = user?.id
     let hasProfile = false
 
     if (userId) {
@@ -56,7 +56,7 @@ export async function updateSession(request: NextRequest) {
 
     return {
       supabaseResponse,
-      userClaims: claimsData?.claims ?? null,
+      userClaims: user ? { sub: user.id } : null,
       hasProfile,
     }
   } catch (error) {
