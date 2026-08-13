@@ -8,7 +8,7 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 
 
-export default function DashboardHeader({ profile, onOpenInfoModal }) {
+export default function DashboardHeader({ profile, onOpenInfoModal, onOpenCsvModal }) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const dropdownRef = useRef(null)
@@ -38,11 +38,10 @@ export default function DashboardHeader({ profile, onOpenInfoModal }) {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  const handleScrollToCsv = () => {
+  const handleOpenCsv = () => {
     setDropdownOpen(false)
-    const elem = document.getElementById("csv-management")
-    if (elem) {
-      elem.scrollIntoView({ behavior: "smooth" })
+    if (onOpenCsvModal) {
+      onOpenCsvModal()
     }
   }
 
@@ -123,7 +122,7 @@ export default function DashboardHeader({ profile, onOpenInfoModal }) {
                   )}
 
                   <button
-                    onClick={handleScrollToCsv}
+                    onClick={handleOpenCsv}
                     className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors group cursor-pointer text-left"
                   >
                     <FileSpreadsheet className="w-4 h-4 text-zinc-400 transition-transform group-hover:scale-110" />

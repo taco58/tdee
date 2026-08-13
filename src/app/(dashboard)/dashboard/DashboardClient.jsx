@@ -23,10 +23,12 @@ const getLocalDateString = (d = new Date()) => {
 }
 
 function convertUnits(weight, logUnit, profileUnit) {
-  if (logUnit === profileUnit) return Math.round(weight * 10) / 10                                                                     
-  if (logUnit === "lbs" && profileUnit === "kg") return Math.round(weight * 0.453592 * 10) / 10
-  if (logUnit === "kg" && profileUnit === "lbs") return Math.round((weight / 0.453592) * 10) / 10
-  return Math.round(weight * 10) / 10
+  if (weight == null || isNaN(parseFloat(weight))) return ""
+  const num = parseFloat(weight)
+  if (logUnit === profileUnit) return Math.round(num * 10) / 10
+  if (logUnit === "lbs" && profileUnit === "kg") return Math.round(num * 0.453592 * 10) / 10
+  if (logUnit === "kg" && profileUnit === "lbs") return Math.round((num / 0.453592) * 10) / 10
+  return Math.round(num * 10) / 10
 }
 
 const generateCalendarFromLogs = (logs = [], profileUnits) => {
@@ -90,11 +92,13 @@ export default function DashboardClient({
 }) {
   const router = useRouter()
   const weightUnit = initialProfile?.units || initialAdaptiveStats?.units || "lbs"
+  const isKg = weightUnit === "kg" || weightUnit === "kgs"
 
   const stats = React.useMemo(
     () => ({
       tdee: initialAdaptiveStats.tdee || (initialAdaptiveStats.formulaEstimate || 2050),
       avgWeight: initialAdaptiveStats.avgWeight ?? null,
+      currentWeight: initialAdaptiveStats.currentWeight ?? initialProfile?.init_weight ?? null,
       weeklyDelta: initialAdaptiveStats.weeklyDelta ?? 0,
       avgCalories: initialAdaptiveStats.avgCalories ?? null,
       daysLogged: initialAdaptiveStats.daysLogged || initialLogs.length,
@@ -103,8 +107,105 @@ export default function DashboardClient({
       formulaEstimate: initialAdaptiveStats.formulaEstimate || 2050,
       unit: weightUnit,
     }),
-    [initialAdaptiveStats, initialLogs, weightUnit]
+    [initialAdaptiveStats, initialLogs, initialProfile, weightUnit]
   )
+
+  // Goal & Target Calorie State
+  const [goalType, setGoalType] = useState("maintain")
+  const [goalRate, setGoalRate] = useState(isKg ? 0.5 : 1.0)
+  const [targetWeight, setTargetWeight] = useState("")
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const timer = setTimeout(() => {
+        const savedGoal = localStorage.getItem("adaptdee_user_goal")
+        const savedRate = localStorage.getItem("adaptdee_user_goal_rate")
+        const savedTargetWeight = localStorage.getItem("adaptdee_user_target_weight")
+        if (savedGoal) setGoalType(savedGoal)
+        if (savedRate && !isNaN(parseFloat(savedRate))) setGoalRate(parseFloat(savedRate))
+        if (savedTargetWeight) setTargetWeight(savedTargetWeight)
+      }, 0)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
+  const handleUpdateGoal = (newType, newRate, newTargetWeight) => {
+    if (newType !== undefined) {
+      setGoalType(newType)
+      if (typeof window !== "undefined") {
+        localStorage.setItem("adaptdee_user_goal", newType)
+      }
+      // If goal type changed and no new target weight was explicitly provided, reset target weight
+      if (newTargetWeight === undefined && newType !== goalType) {
+        setTargetWeight("")
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("adaptdee_user_target_weight")
+        }
+      }
+    }
+    if (newRate !== undefined) {
+      setGoalRate(newRate)
+      if (typeof window !== "undefined") {
+        localStorage.setItem("adaptdee_user_goal_rate", newRate.toString())
+      }
+    }
+    if (newTargetWeight !== undefined) {
+      const sanitizedWeight = newTargetWeight ? newTargetWeight.toString() : ""
+      setTargetWeight(sanitizedWeight)
+      if (typeof window !== "undefined") {
+        if (sanitizedWeight) {
+          localStorage.setItem("adaptdee_user_target_weight", sanitizedWeight)
+        } else {
+          localStorage.removeItem("adaptdee_user_target_weight")
+        }
+      }
+    }
+  }
+
+  // Derived Goal Calculations
+  const baseTdee = stats.tdee || 2000
+  const kcalPerUnit = isKg ? 7700 : 3500
+  const activeRateNum = isNaN(goalRate) ? 0 : goalRate
+  const dailyCalorieDelta = Math.round((activeRateNum * kcalPerUnit) / 7)
+
+  let targetCalories = baseTdee
+  if (goalType === "lose") targetCalories = Math.max(1000, baseTdee - dailyCalorieDelta)
+  if (goalType === "gain") targetCalories = baseTdee + dailyCalorieDelta
+
+  const parsedTargetWeight = parseFloat(targetWeight)
+  const currentWeightNum = stats.avgWeight || stats.currentWeight
+  let weeksToGoal = null
+  let projectedGoalDate = null
+
+  const isValidGoalTarget =
+    !isNaN(parsedTargetWeight) &&
+    parsedTargetWeight > 0 &&
+    currentWeightNum &&
+    activeRateNum > 0 &&
+    ((goalType === "lose" && parsedTargetWeight < currentWeightNum) ||
+     (goalType === "gain" && parsedTargetWeight > currentWeightNum))
+
+  if (isValidGoalTarget) {
+    const weightDiff = Math.abs(currentWeightNum - parsedTargetWeight)
+    weeksToGoal = parseFloat((weightDiff / activeRateNum).toFixed(1))
+    const targetDateObj = new Date()
+    targetDateObj.setDate(targetDateObj.getDate() + Math.round(weeksToGoal * 7))
+    projectedGoalDate = targetDateObj.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })
+  }
+
+  const goalInfo = {
+    goalType,
+    goalRate: activeRateNum,
+    targetWeight: isValidGoalTarget ? parsedTargetWeight : null,
+    targetCalories,
+    dailyCalorieDelta,
+    weeksToGoal,
+    projectedGoalDate,
+  }
 
   const weightData = initialAdaptiveStats.weightChartData || []
   const tdeeData = initialAdaptiveStats.tdeeHistory || []
@@ -123,12 +224,17 @@ export default function DashboardClient({
   const [isEditingToday, setIsEditingToday] = useState(false)
   const [logPanelOpen, setLogPanelOpen] = useState(false)
   const [inputWeight, setInputWeight] = useState(
-    isLoggedToday ? convertUnits(initialLogs.find((l) => l.date === todayStr)?.weight, initialLogs.find((l) => l.date === todayStr)?.unit, weightUnit) : ""
+    isLoggedToday
+      ? convertUnits(
+          initialLogs.find((l) => l.date === todayStr)?.weight,
+          initialLogs.find((l) => l.date === todayStr)?.unit,
+          weightUnit
+        )
+      : ""
   )
   const [inputCalories, setInputCalories] = useState(
     isLoggedToday ? initialLogs.find((l) => l.date === todayStr)?.calories : ""
   )
-  
 
   const [selectedCalendarDay, setSelectedCalendarDay] = useState(null)
   const [editDayWeight, setEditDayWeight] = useState("")
@@ -139,21 +245,28 @@ export default function DashboardClient({
     setIsEditingToday(false)
     setLogPanelOpen(false)
 
-    if (inputWeight && inputCalories) {
-      const dateStr = getLocalDateString()
-      try {
-        const res = await createLogEntry({
-          date: dateStr,
-          weight: inputWeight,
-          calories: inputCalories,
-          unit: weightUnit,
-        })
-        if (res?.success) {
-          router.refresh()
+    const parsedWeight = inputWeight !== "" ? parseFloat(inputWeight) : NaN
+    const parsedCalories = inputCalories !== "" ? parseInt(inputCalories, 10) : NaN
+    const hasWeight = !isNaN(parsedWeight) && parsedWeight > 0
+    const hasCalories = !isNaN(parsedCalories) && parsedCalories >= 0
+
+    const dateStr = getLocalDateString()
+    try {
+      const res = await createLogEntry({
+        date: dateStr,
+        weight: hasWeight ? parsedWeight : null,
+        calories: hasCalories ? parsedCalories : null,
+        unit: weightUnit,
+      })
+      if (res?.success) {
+        if (!hasWeight && !hasCalories) {
+          setInputWeight("")
+          setInputCalories("")
         }
-      } catch (err) {
-        console.log("Saving log entry note:", err)
+        router.refresh()
       }
+    } catch (err) {
+      console.log("Saving log entry note:", err)
     }
   }
 
@@ -168,14 +281,16 @@ export default function DashboardClient({
     if (!selectedCalendarDay || !selectedCalendarDay.dateStr) return
 
     const dateStr = selectedCalendarDay.dateStr
-    const hasWeight = editDayWeight !== "" && !isNaN(parseFloat(editDayWeight))
-    const hasCalories = editDayCalories !== "" && !isNaN(parseInt(editDayCalories, 10))
+    const parsedWeight = editDayWeight !== "" ? parseFloat(editDayWeight) : NaN
+    const parsedCalories = editDayCalories !== "" ? parseInt(editDayCalories, 10) : NaN
+    const hasWeight = !isNaN(parsedWeight) && parsedWeight > 0
+    const hasCalories = !isNaN(parsedCalories) && parsedCalories >= 0
 
     try {
       const res = await createLogEntry({
         date: dateStr,
-        weight: hasWeight ? editDayWeight : null,
-        calories: hasCalories ? editDayCalories : null,
+        weight: hasWeight ? parsedWeight : null,
+        calories: hasCalories ? parsedCalories : null,
         unit: weightUnit,
       })
       if (res?.success) {
@@ -207,10 +322,10 @@ export default function DashboardClient({
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none z-0" />
 
       <AnnouncementBanner
-        id="csv_excel_v1"
+        id="weight_goals"
         title="New Feature"
-        message="You can now import and export CSV files directly from your profile menu!"
-        messageSm= "Import and export CSV files from your profile!"
+        message="You can now set your weight gain/maintenance/loss goals!"
+        messageSm="You can now set your weight goals!"
       />
 
       <DashboardHeader
@@ -223,7 +338,11 @@ export default function DashboardClient({
         <div className="flex flex-col gap-6 md:grid lg:grid-cols-[1fr_380px] lg:gap-6 lg:items-start">
           
           <div id="trend-charts" className="space-y-6 order-2 md:order-1 md:pb-12">
-            <WeightTrendChart weightData={weightData} weightUnit={weightUnit} />
+            <WeightTrendChart
+              weightData={weightData}
+              weightUnit={weightUnit}
+              targetWeight={goalInfo.targetWeight}
+            />
 
             <TdeeTrendChart
               tdeeData={tdeeData}
@@ -246,10 +365,14 @@ export default function DashboardClient({
           </div>
 
           <div className="space-y-6 order-1 md:order-2 md:sticky md:top-24 md:h-fit mb-6 md:mb-0">
-            <HeroStat stats={stats} />
+            <HeroStat
+              stats={stats}
+              goalInfo={goalInfo}
+              onUpdateGoal={handleUpdateGoal}
+            />
             
             <LogTodaySection
-              key = {`${todayStr}-${weightUnit}`}
+              key={`${todayStr}-${weightUnit}`}
               isLoggedToday={isLoggedToday && !isEditingToday}
               setIsLoggedToday={() => setIsEditingToday(true)}
               logPanelOpen={logPanelOpen}
@@ -260,6 +383,7 @@ export default function DashboardClient({
               setInputCalories={setInputCalories}
               onSaveTodayLog={handleSaveTodayLog}
               weightUnit={weightUnit}
+              targetCalories={goalInfo.targetCalories}
             />
 
             <StatGrid stats={stats} />

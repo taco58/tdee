@@ -79,9 +79,17 @@ export default function CsvImportExportModal({ isOpen, onClose, logs = [], weigh
         const dateRaw = cols[dateIdx]
         if (!dateRaw) continue
 
-        const dateObj = new Date(dateRaw)
-        if (isNaN(dateObj.getTime())) continue
-        const dateFormatted = dateObj.toISOString().split("T")[0]
+        let dateFormatted = ""
+        if (/^\d{4}-\d{2}-\d{2}$/.test(dateRaw)) {
+          dateFormatted = dateRaw
+        } else {
+          const dateObj = new Date(dateRaw)
+          if (isNaN(dateObj.getTime())) continue
+          const year = dateObj.getFullYear()
+          const month = String(dateObj.getMonth() + 1).padStart(2, "0")
+          const day = String(dateObj.getDate()).padStart(2, "0")
+          dateFormatted = `${year}-${month}-${day}`
+        }
 
         const weightVal = weightIdx !== -1 && cols[weightIdx] ? parseFloat(cols[weightIdx]) : null
         const calVal = calIdx !== -1 && cols[calIdx] ? parseInt(cols[calIdx], 10) : null

@@ -132,7 +132,34 @@ export default function DashboardInfoModal({ isOpen, onClose }) {
             {/* Section 4 */}
             <div>
               <span className="text-xs font-mono font-semibold text-[#F97316] uppercase tracking-widest block mb-2">
-                04 · CSV Data Backup & Transfer
+                04 · Goal Planning & Caloric Targets
+              </span>
+              <h3 className="font-display text-base font-bold text-white mb-2">
+                Dynamic Nutrition & Goal Trajectory
+              </h3>
+              <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-3">
+                Your dashboard transforms your adapted TDEE into actionable daily nutrition targets tailored to your body composition goals:
+              </p>
+              <ul className="space-y-2 text-xs sm:text-sm text-zinc-400">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#F97316] font-mono font-bold">•</span>
+                  <span><strong>Dynamic Daily Budget:</strong> Select your goal mode (Weight Loss, Maintain, or Weight Gain) and weekly target rate. Your daily calorie target automatically shifts as your true TDEE adapts.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#F97316] font-mono font-bold">•</span>
+                  <span><strong>Target Goal Weight & Milestone ETA:</strong> Set an optional target goal weight to visualize your timeline, estimated weeks remaining, projected finish date, and an overlaid reference line on your weight trend chart.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#F97316] font-mono font-bold">•</span>
+                  <span><strong>Live Logging Feedback:</strong> Entering your daily calories gives instant feedback showing your remaining budget or surplus for the day.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Section 5 */}
+            <div>
+              <span className="text-xs font-mono font-semibold text-[#F97316] uppercase tracking-widest block mb-2">
+                05 · CSV Data Backup & Transfer
               </span>
               <h3 className="font-display text-base font-bold text-white mb-2">
                 Importing & Exporting Your Logs

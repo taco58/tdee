@@ -15,8 +15,12 @@ export default function LogTodaySection({
   setInputCalories,
   onSaveTodayLog,
   weightUnit = "lbs",
+  targetCalories = null,
 }) {
   const displayUnit = weightUnit.toUpperCase()
+  const parsedInputCalories = inputCalories !== "" ? parseInt(inputCalories, 10) : NaN
+  const hasValidCalories = !isNaN(parsedInputCalories) && parsedInputCalories >= 0
+
   return (
     <>
       <div className="hidden md:block">
@@ -36,21 +40,46 @@ export default function LogTodaySection({
                 <input
                   type="number"
                   step="0.1"
+                  min="0.1"
                   value={inputWeight}
                   onChange={(e) => setInputWeight(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white font-bold text-lg focus:border-[#F97316] focus:outline-none transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-1 font-mono">
-                  CALORIES (KCAL)
-                </label>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold font-mono">
+                    CALORIES (KCAL)
+                  </label>
+                  {targetCalories && (
+                    <span className="text-[10px] font-mono text-zinc-500">
+                      Budget: {targetCalories.toLocaleString()}
+                    </span>
+                  )}
+                </div>
                 <input
                   type="number"
+                  min="0"
                   value={inputCalories}
                   onChange={(e) => setInputCalories(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white font-bold text-lg focus:border-[#F97316] focus:outline-none transition-colors"
                 />
+                {targetCalories && hasValidCalories && (
+                  <div className="flex items-center justify-between text-[10px] font-mono mt-1 text-zinc-400">
+                    <span>Target: {targetCalories.toLocaleString()} kcal</span>
+                    <span
+                      className={
+                        parsedInputCalories > targetCalories
+                          ? "text-amber-400 font-semibold"
+                          : "text-emerald-400 font-semibold"
+                      }
+                    >
+                      {parsedInputCalories <= targetCalories
+                        ? `${(targetCalories - parsedInputCalories).toLocaleString()} kcal remaining`
+                        : `+${(parsedInputCalories - targetCalories).toLocaleString()} kcal over budget`}
+                    </span>
+                  </div>
+                )}
               </div>
               <button
                 type="submit"
@@ -79,8 +108,27 @@ export default function LogTodaySection({
               </button>
             </div>
             <p className="text-xs font-mono text-zinc-400">
-              {inputWeight} {weightUnit} · {inputCalories} kcal logged
+              {inputWeight ? `${inputWeight} ${weightUnit}` : null}
+              {inputWeight && inputCalories ? " · " : null}
+              {inputCalories ? `${inputCalories} kcal` : null}
+              {!inputWeight && !inputCalories ? "Entry saved" : " logged"}
             </p>
+            {targetCalories && hasValidCalories && (
+              <div className="mt-2 pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono">
+                <span className="text-zinc-500">Budget vs Intake:</span>
+                <span
+                  className={
+                    parsedInputCalories > targetCalories
+                      ? "text-amber-400 font-medium"
+                      : "text-emerald-400 font-medium"
+                  }
+                >
+                  {parsedInputCalories <= targetCalories
+                    ? `${(targetCalories - parsedInputCalories).toLocaleString()} kcal remaining`
+                    : `+${(parsedInputCalories - targetCalories).toLocaleString()} kcal over`}
+                </span>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -94,7 +142,7 @@ export default function LogTodaySection({
             >
               <div className="flex items-center gap-2.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
-                <span>Log today&apos;s weight & calories</span>
+                <span>Log today&apos;s entry</span>
               </div>
               <ArrowRight className="w-4 h-4" />
             </button>
@@ -149,12 +197,13 @@ export default function LogTodaySection({
 
                 <form onSubmit={onSaveTodayLog} className="space-y-4">
                   <div>
-                    <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-1">
+                    <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-1 font-mono">
                       WEIGHT ({displayUnit})
                     </label>
                     <input
                       type="number"
                       step="0.1"
+                      min="0.1"
                       value={inputWeight}
                       onChange={(e) => setInputWeight(e.target.value)}
                       className="w-full bg-white/5 border border-white/15 rounded-xl p-4 text-white text-2xl font-bold focus:border-orange-500 focus:outline-none transition-colors"
@@ -162,15 +211,39 @@ export default function LogTodaySection({
                   </div>
 
                   <div>
-                    <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-1">
-                      CALORIES (KCAL)
-                    </label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold font-mono">
+                        CALORIES (KCAL)
+                      </label>
+                      {targetCalories && (
+                        <span className="text-[10px] font-mono text-zinc-500">
+                          Budget: {targetCalories.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="number"
+                      min="0"
                       value={inputCalories}
                       onChange={(e) => setInputCalories(e.target.value)}
                       className="w-full bg-white/5 border border-white/15 rounded-xl p-4 text-white text-2xl font-bold focus:border-orange-500 focus:outline-none transition-colors"
                     />
+                    {targetCalories && hasValidCalories && (
+                      <div className="flex items-center justify-between text-[11px] font-mono mt-1.5 text-zinc-400">
+                        <span>Target: {targetCalories.toLocaleString()} kcal</span>
+                        <span
+                          className={
+                            parsedInputCalories > targetCalories
+                              ? "text-amber-400 font-semibold"
+                              : "text-emerald-400 font-semibold"
+                          }
+                        >
+                          {parsedInputCalories <= targetCalories
+                            ? `${(targetCalories - parsedInputCalories).toLocaleString()} kcal remaining`
+                            : `+${(parsedInputCalories - targetCalories).toLocaleString()} kcal over budget`}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <button

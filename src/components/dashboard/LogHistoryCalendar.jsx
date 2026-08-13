@@ -279,6 +279,7 @@ export default function LogHistoryCalendar({
                   <input
                     type="number"
                     step="0.1"
+                    min="0.1"
                     value={editDayWeight}
                     onChange={(e) => setEditDayWeight(e.target.value)}
                     className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-white font-bold text-sm tabular-nums focus:border-orange-500/60 focus:outline-none focus:ring-1 focus:ring-orange-500/20 transition-all"
@@ -290,6 +291,7 @@ export default function LogHistoryCalendar({
                   </label>
                   <input
                     type="number"
+                    min="0"
                     value={editDayCalories}
                     onChange={(e) => setEditDayCalories(e.target.value)}
                     className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-white font-bold text-sm tabular-nums focus:border-orange-500/60 focus:outline-none focus:ring-1 focus:ring-orange-500/20 transition-all"

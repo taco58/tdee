@@ -101,10 +101,18 @@ function gapFill(week: any[], fallbackWeight: number, fallbackCalories: number) 
 }
 
 function convertUnits(weight: number, logUnit: string, profileUnit: string) {
-  if (logUnit === profileUnit) return weight
-  if (logUnit === "lbs" && profileUnit === "kg") return weight * 0.453592
-  if (logUnit === "kg" && profileUnit === "lbs") return weight / 0.453592
+  const normLog = logUnit === "kg" || logUnit === "kgs" ? "kg" : "lbs"
+  const normProfile = profileUnit === "kg" || profileUnit === "kgs" ? "kg" : "lbs"
+  if (normLog === normProfile) return weight
+  if (normLog === "lbs" && normProfile === "kg") return weight * 0.453592
+  if (normLog === "kg" && normProfile === "lbs") return weight / 0.453592
   return weight
+}
+
+function formatDisplayDate(dateStr: string): string {
+  const [y, m, d] = dateStr.split("-").map(Number)
+  if (!y || !m || !d) return dateStr
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", { month: "short", day: "numeric" })
 }
 
 export async function mifflinStJeor(profile: any): Promise<number> {
@@ -154,8 +162,11 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
     .filter((l) => l.date)
     .sort((a, b) => (a.date > b.date ? 1 : -1))
 
-  const startDate = new Date(cleanedLogs[0].date)
-  const endDate = new Date(cleanedLogs[cleanedLogs.length - 1].date)
+  const [startY, startM, startD] = cleanedLogs[0].date.split("-").map(Number)
+  const [endY, endM, endD] = cleanedLogs[cleanedLogs.length - 1].date.split("-").map(Number)
+
+  const startDate = new Date(Date.UTC(startY, startM - 1, startD))
+  const endDate = new Date(Date.UTC(endY, endM - 1, endD))
   
   const logMap = new Map<string, { weight: number | null; calories: number | null }>()
   cleanedLogs.forEach((l) => logMap.set(l.date, { weight: l.weight, calories: l.calories }))
@@ -167,7 +178,7 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
     const dStr = curr.toISOString().split("T")[0]
     const entry = logMap.get(dStr) || { weight: null, calories: null }
     dailySeries.push({ date: dStr, weight: entry.weight, calories: entry.calories })
-    curr.setDate(curr.getDate() + 1)
+    curr.setUTCDate(curr.getUTCDate() + 1)
   }
 
   let wtTrend: number | null = null
@@ -225,7 +236,7 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
   const tdeeHistory: Array<{ week: string; date: string; tdee: number }> = []
   for (let idx = 6; idx < dailyState.length; idx += 7) {
     const s = dailyState[idx]
-    const dtFormatted = new Date(s.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    const dtFormatted = formatDisplayDate(s.date)
     tdeeHistory.push({
       week: `Wk ${tdeeHistory.length + 1}`,
       date: dtFormatted,
@@ -234,7 +245,7 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
   }
   if (dailyState.length > 0) {
     const s = dailyState[dailyState.length - 1]
-    const dtFormatted = new Date(s.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+    const dtFormatted = formatDisplayDate(s.date)
     const lastHist = tdeeHistory[tdeeHistory.length - 1]
     if (!lastHist || lastHist.date !== dtFormatted) {
       tdeeHistory.push({
@@ -248,7 +259,7 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
   const weightChartData = dailyState
     .filter((s) => s.rawWeight !== null || s.weightTrend !== null)
     .map((s, idx) => ({
-      date: new Date(s.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      date: formatDisplayDate(s.date),
       weight: s.rawWeight || (s.weightTrend ? parseFloat(s.weightTrend.toFixed(1)) : null),
       rollingAvg: s.weightTrend ? parseFloat(s.weightTrend.toFixed(1)) : (startWeight || 150),
       dayNum: idx + 1,

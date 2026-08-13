@@ -78,11 +78,14 @@ export async function createLogEntry(logData: any) {
     throw new Error("Unauthorized")
   }
 
-  const weight = logData.weight ? parseFloat(logData.weight) : null
-  const calories = logData.calories ? parseInt(logData.calories, 10) : null
+  const rawWeight = logData.weight != null ? parseFloat(logData.weight) : null
+  const rawCalories = logData.calories != null ? parseInt(logData.calories, 10) : null
+
+  const weight = rawWeight !== null && !isNaN(rawWeight) && rawWeight > 0 ? rawWeight : null
+  const calories = rawCalories !== null && !isNaN(rawCalories) && rawCalories >= 0 ? rawCalories : null
 
   if (weight === null && calories === null) {
-    const {error: deleteError } = await supabase
+    const { error: deleteError } = await supabase
       .from("logs")
       .delete()
       .eq("user_id", user.id)
@@ -91,6 +94,7 @@ export async function createLogEntry(logData: any) {
     if (deleteError) {
       return { success: false, error: deleteError.message }
     }
+    revalidatePath("/dashboard")
     return { success: true, deleted: true }
   }
 
@@ -100,8 +104,8 @@ export async function createLogEntry(logData: any) {
       {
         user_id: user.id,
         date: logData.date,
-        weight: logData.weight ? parseFloat(logData.weight) : null,
-        calories: logData.calories ? parseInt(logData.calories, 10) : null,
+        weight: weight,
+        calories: calories,
         unit: logData.unit || "lbs",
       },
       { onConflict: "user_id,date" }
@@ -113,6 +117,7 @@ export async function createLogEntry(logData: any) {
     return { success: false, error: error.message }
   }
 
+  revalidatePath("/dashboard")
   return { success: true, data }
 }
 
@@ -133,13 +138,18 @@ export async function importBatchLogEntries(entries: Array<{ date: string; weigh
 
   const rowsToUpsert = entries
     .filter((e) => e.date && (e.weight != null || e.calories != null))
-    .map((e) => ({
-      user_id: user.id,
-      date: e.date,
-      weight: e.weight != null && !isNaN(parseFloat(e.weight.toString())) ? parseFloat(e.weight.toString()) : null,
-      calories: e.calories != null && !isNaN(parseInt(e.calories.toString(), 10)) ? parseInt(e.calories.toString(), 10) : null,
-      unit: e.unit || "lbs",
-    }))
+    .map((e) => {
+      const parsedWeight = e.weight != null && !isNaN(parseFloat(e.weight.toString())) ? parseFloat(e.weight.toString()) : null
+      const parsedCalories = e.calories != null && !isNaN(parseInt(e.calories.toString(), 10)) ? parseInt(e.calories.toString(), 10) : null
+      return {
+        user_id: user.id,
+        date: e.date,
+        weight: parsedWeight !== null && parsedWeight > 0 ? parsedWeight : null,
+        calories: parsedCalories !== null && parsedCalories >= 0 ? parsedCalories : null,
+        unit: e.unit || "lbs",
+      }
+    })
+    .filter((r) => r.weight !== null || r.calories !== null)
 
   if (rowsToUpsert.length === 0) {
     return { success: false, error: "No valid entries found to import" }

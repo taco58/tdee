@@ -10,19 +10,21 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts"
-import { Tabs } from "@heroui/react"
 
 const CustomWeightTooltip = ({
   active,
   payload,
   label,
   weightUnit = "lbs",
+  targetWeight = null,
 }) => {
   if (active && payload && payload.length) {
     const rawVal = payload.find((p) => p.dataKey === "weight")?.value
     const avgVal = payload.find((p) => p.dataKey === "rollingAvg")?.value
     const diff = rawVal && avgVal ? (rawVal - avgVal).toFixed(1) : null
+    const distToGoal = targetWeight && avgVal ? (avgVal - targetWeight).toFixed(1) : null
 
     return (
       <div className="bg-[#0D0D0D] border border-white/10 p-3.5 rounded-xl shadow-2xl text-xs text-white min-w-[170px]">
@@ -48,11 +50,29 @@ const CustomWeightTooltip = ({
               {avgVal} {weightUnit}
             </span>
           </div>
+          {targetWeight && (
+            <div className="flex justify-between items-center text-emerald-400">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" /> Goal:
+              </span>
+              <span className="font-bold">
+                {targetWeight} {weightUnit}
+              </span>
+            </div>
+          )}
           {diff !== null && (
             <div className="pt-1.5 border-t border-white/10 flex justify-between text-[11px] text-white/50 font-sans">
               <span>Fluctuation:&nbsp;</span>
               <span className="text-white-400 font-medium">
                 {diff > 0 ? `+${diff}` : diff} {weightUnit} vs avg
+              </span>
+            </div>
+          )}
+          {distToGoal !== null && (
+            <div className="pt-1 flex justify-between text-[11px] text-emerald-400/80 font-sans">
+              <span>Dist to Goal:&nbsp;</span>
+              <span className="font-medium">
+                {Math.abs(parseFloat(distToGoal))} {weightUnit} {parseFloat(distToGoal) > 0 ? "to lose" : "to gain"}
               </span>
             </div>
           )}
@@ -70,7 +90,7 @@ const RANGE_OPTIONS = [
   { id: "all", label: "All", days: null },
 ]
 
-export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
+export default function WeightTrendChart({ weightData, weightUnit = "lbs", targetWeight = null }) {
   const [selectedRange, setSelectedRange] = useState("month")
 
   const selectedDays = RANGE_OPTIONS.find((r) => r.id === selectedRange)?.days
@@ -79,7 +99,7 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
     : weightData
 
   const allWeights = filteredData
-    .flatMap((d) => [d.weight, d.rollingAvg])
+    .flatMap((d) => [d.weight, d.rollingAvg, targetWeight])
     .filter((w) => typeof w === "number" && !isNaN(w) && w > 0)
 
   const minWeight = allWeights.length
@@ -118,6 +138,12 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
             <span className="w-3 h-[3px] bg-orange-500 rounded-full" />
             <span className="text-zinc-300 font-semibold">Trend</span>
           </div>
+          {targetWeight && (
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-[2px] bg-emerald-400 rounded-full" />
+              <span className="text-emerald-400 font-semibold">Goal</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -141,7 +167,6 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
                   axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
                   tick={{ fill: "#94A3B8", fontSize: 9, dy: 8 }}
                   interval="preserveEnd"
-                  // minTickGap={10}
                 />
 
                 <YAxis
@@ -157,8 +182,28 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs" }) {
                 />
 
                 <Tooltip
-                  content={<CustomWeightTooltip weightUnit={weightUnit} />}
+                  content={
+                    <CustomWeightTooltip
+                      weightUnit={weightUnit}
+                      targetWeight={targetWeight}
+                    />
+                  }
                 />
+
+                {targetWeight && (
+                  <ReferenceLine
+                    y={targetWeight}
+                    stroke="#10B981"
+                    strokeDasharray="4 4"
+                    strokeWidth={1.5}
+                    label={{
+                      value: `Goal ${targetWeight} ${weightUnit}`,
+                      fill: "#10B981",
+                      fontSize: 10,
+                      position: "insideBottomRight",
+                    }}
+                  />
+                )}
 
                 <Line
                   type="monotone"
