@@ -12,8 +12,36 @@ import { Button } from "@/components/ui/Button"
 import Link from "next/link"
 
 export default function Home() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://adaptdee.xyz/#organization",
+        "name": "AdapTDEE",
+        "url": "https://adaptdee.xyz",
+        "logo": "https://adaptdee.xyz/logo.png",
+        "description": "Adaptive thermodynamic metabolic modeling and TDEE expenditure calculator.",
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://adaptdee.xyz/#webapp",
+        "name": "AdapTDEE - Adaptive TDEE Calculator & Metabolic Tracker",
+        "url": "https://adaptdee.xyz",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "All",
+        "description": "Dynamic TDEE calculator and weight tracker that continuously adapts to metabolic adaptation and bodyweight trends.",
+        "isAccessibleForFree": true,
+      },
+    ],
+  }
+
   return (
     <main className="min-h-screen bg-[#0A0A0F] text-white selection:bg-orange-500/30 overflow-x-hidden font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <Navbar />
 
       <Hero />

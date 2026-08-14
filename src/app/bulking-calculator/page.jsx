@@ -30,50 +30,22 @@ export const metadata = {
 }
 
 export default function BulkingCalculatorPage() {
-  const faqSchema = {
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How big should a calorie surplus be for lean bulking?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Evidence-based research recommends a modest caloric surplus of 100 to 300 calories per day (roughly 5% to 15% above maintenance TDEE). Exceeding this surplus does not speed up muscle protein synthesis but drastically increases adipose body fat accumulation."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the maximum rate of natural muscle gain per month?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Beginners can naturally build roughly 1.5 to 2.5 lbs of muscle per month (1.0-1.5% body weight). Intermediates can build roughly 1.0 to 1.5 lbs per month (0.5-1.0% body weight). Advanced lifters near their genetic ceiling gain roughly 0.25 to 0.5 lbs of pure muscle per month."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why is 'dirty bulking' counterproductive?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Muscle protein synthesis has a biological rate ceiling. Eating 1,000+ extra calories a day forces the excess energy directly into fat stores, worsening insulin sensitivity, degrading the muscle-to-fat (P-ratio) partitioning, and requiring a much longer, grueling cut later."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does AdapTDEE help during a bulk?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "During a bulk, your TDEE will rise due to increased body weight, the thermic effect of food (TEF), and higher training volume. AdapTDEE adjusts your surplus dynamically so you maintain a true lean surplus without stalling."
-        }
-      }
-    ]
+    "@type": "WebApplication",
+    "name": "AdapTDEE Bulking & Hypertrophy Calculator",
+    "url": "https://adaptdee.xyz/bulking-calculator",
+    "description": "Calculate lean muscle gain calorie surplus, optimal macronutrient split, and monthly hypertrophy targets.",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "All",
+    "isAccessibleForFree": true,
   }
 
   return (
     <main className="min-h-screen bg-[#0A0A0F] text-white selection:bg-orange-500/30 overflow-x-hidden font-sans">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
       <Navbar />

@@ -30,42 +30,22 @@ export const metadata = {
 }
 
 export default function CalorieDeficitCalculatorPage() {
-  const faqSchema = {
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is a calorie deficit?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A calorie deficit occurs when you consume fewer calories than your body expends over a given period. When in a deficit, your body mobilizes stored energy (primarily body fat) to meet its energetic demands, leading to weight reduction."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the best calorie deficit percentage for fat loss?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "For most individuals, a moderate 15% to 20% calorie deficit provides the ideal balance between sustainable fat loss (0.5 to 1.5 lbs per week) and muscle retention without triggering severe lethargy or excessive hunger."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why do calorie deficit calculations stop working over time?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As you lose weight, your body requires less energy to move and maintain itself. Additionally, adaptive thermogenesis (metabolic adaptation) and reductions in Non-Exercise Activity Thermogenesis (NEAT) lower your total expenditure. Tracking your weight and calorie trends adaptively ensures your deficit dynamically adjusts to prevent plateaus."
-        }
-      }
-    ]
+    "@type": "WebApplication",
+    "name": "AdapTDEE Calorie Deficit Calculator",
+    "url": "https://adaptdee.xyz/calorie-deficit-calculator",
+    "description": "Calculate daily calorie deficit, target intake budget, and fat loss timeline based on personal metrics and activity levels.",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "All",
+    "isAccessibleForFree": true,
   }
 
   return (
     <main className="min-h-screen bg-[#0A0A0F] text-white selection:bg-orange-500/30 overflow-x-hidden font-sans">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
       <Navbar />

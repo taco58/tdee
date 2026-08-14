@@ -30,42 +30,22 @@ export const metadata = {
 }
 
 export default function BmrCalculatorPage() {
-  const faqSchema = {
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is Basal Metabolic Rate (BMR)?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Basal Metabolic Rate (BMR) is the amount of energy your body expends while at complete rest in a neutral environment to maintain essential autonomic life functions, such as respiration, cellular synthesis, blood circulation, and brain activity."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the difference between BMR and TDEE?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "BMR represents the baseline calories burned at rest with zero activity. Total Daily Energy Expenditure (TDEE) is your BMR plus physical activity, deliberate workouts, spontaneous movement (NEAT), and the thermic effect of digestion (TEF)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Which BMR formula is the most accurate?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The Mifflin-St Jeor equation is widely recognized by clinical dietetics as the most accurate population formula. If you have an accurate measurement of your body fat percentage, the Katch-McArdle formula is even more precise because it calculates BMR directly from lean body mass."
-        }
-      }
-    ]
+    "@type": "WebApplication",
+    "name": "AdapTDEE BMR Calculator",
+    "url": "https://adaptdee.xyz/bmr-calculator",
+    "description": "Calculate Basal Metabolic Rate using Mifflin-St Jeor, Harris-Benedict, and Katch-McArdle equations.",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "All",
+    "isAccessibleForFree": true,
   }
 
   return (
     <main className="min-h-screen bg-[#0A0A0F] text-white selection:bg-orange-500/30 overflow-x-hidden font-sans">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
       <Navbar />

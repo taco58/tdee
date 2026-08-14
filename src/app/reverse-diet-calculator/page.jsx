@@ -31,50 +31,22 @@ export const metadata = {
 }
 
 export default function ReverseDietCalculatorPage() {
-  const faqSchema = {
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is evidence-based reverse dieting?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Reverse dieting is the methodical process of incrementally increasing daily caloric intake (typically +50 to +150 calories per week, prioritized through carbohydrates) after an extended fat loss phase. It enables Non-Exercise Activity Thermogenesis (NEAT), thyroid hormones (T3), and leptin to recover while keeping fat accumulation to a minimum."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why does scale weight jump in the first 1-2 weeks of a reverse diet?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "When carbohydrates and calories increase, your body replenishes depleted muscle and liver glycogen stores. Each gram of glycogen bonds with approximately 3 grams of water inside the muscle cell. A 2 to 4 lb increase on the scale is almost purely intracellular water and muscle fullness, not body fat."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why should reverse dieting calories come primarily from carbohydrates?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Carbohydrates are the most potent driver of active thyroid hormone (T3) conversion, leptin stimulation, and central nervous system recovery. Dietary fat is maintained at a healthy hormonal floor, while protein stays fixed at ~0.8-1.0g per lb of body weight."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How is AdapTDEE used during a reverse diet?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "During a reverse diet, your true metabolic rate will rise alongside your food intake as spontaneous energy expenditure expands. AdapTDEE computes your actual rising expenditure curve in real time, allowing you to increase calories faster without fear of stalling or rebounding."
-        }
-      }
-    ]
+    "@type": "WebApplication",
+    "name": "AdapTDEE Reverse Dieting Calculator",
+    "url": "https://adaptdee.xyz/reverse-diet-calculator",
+    "description": "Calculate scientific weekly caloric and macronutrient ramp schedule to restore metabolic rate after dieting.",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "All",
+    "isAccessibleForFree": true,
   }
 
   return (
     <main className="min-h-screen bg-[#0A0A0F] text-white selection:bg-orange-500/30 overflow-x-hidden font-sans">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
       <Navbar />

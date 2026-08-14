@@ -31,42 +31,22 @@ export const metadata = {
 }
 
 export default function MacroCalculatorPage() {
-  const faqSchema = {
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How much protein should I eat per day?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "For active individuals, lifters, and those in a calorie deficit, evidence-based research recommends consuming 0.8 to 1.0 grams of protein per pound of body weight (1.6 to 2.2g per kg) to preserve and build lean muscle tissue while maximizing satiety."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How are daily fats and carbohydrates calculated?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Dietary fats are set to 20% to 35% of total calorie intake to support hormonal health and cellular function (9 calories per gram). The remaining calories are allocated to carbohydrates (4 calories per gram) to fuel high-intensity training, athletic performance, and glycogen stores."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Should I adjust my macros as my weight changes?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. As body weight and metabolic rate change, your calorie ceiling shifts. Updating your macros dynamically ensures you stay in an optimal deficit or surplus without stalling."
-        }
-      }
-    ]
+    "@type": "WebApplication",
+    "name": "AdapTDEE Macro Calculator",
+    "url": "https://adaptdee.xyz/macro-calculator",
+    "description": "Calculate daily protein, carbohydrate, and fat targets based on TDEE, bodyweight, and fitness goals.",
+    "applicationCategory": "HealthApplication",
+    "operatingSystem": "All",
+    "isAccessibleForFree": true,
   }
 
   return (
     <main className="min-h-screen bg-[#0A0A0F] text-white selection:bg-orange-500/30 overflow-x-hidden font-sans">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
       <Navbar />
