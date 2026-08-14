@@ -24,7 +24,8 @@ export default function Navbar() {
   const navLinks = [
     { id: 'how-it-works', label: 'How it works', href: '#how-it-works' },
     { id: 'science', label: 'The Science', href: '#science' },
-    { id: 'features', label: 'Features', href: '#features' }
+    { id: 'features', label: 'Features', href: '#features' },
+    { id: 'faq', label: 'FAQ', href: '#faq' },
   ];
 
   return (
@@ -61,7 +62,7 @@ export default function Navbar() {
                   key={link.id}
                   href={link.href}
                   onMouseEnter={() => setHoveredLink(link.id)}
-                  className="relative text-[10px] uppercase tracking-[0.15em] font-semibold px-4 py-2 text-white/75 hover:text-white transition-colors duration-300 rounded-full text-center"
+                  className="relative text-[10px] uppercase tracking-[0.15em] font-semibold px-2 py-2 text-white/75 hover:text-white transition-colors duration-300 rounded-full text-center"
                 >
                   <span className="relative z-10">{link.label}</span>
                   {hoveredLink === link.id && (
@@ -99,7 +100,7 @@ export default function Navbar() {
               <Image 
                 src="/logo.png" 
                 alt="Logo" 
-                width={32} 
+                width={50} 
                 height={32} 
                 style={{ width: "auto", height: "auto" }}
                 className="rounded-full object-cover shrink-0"
@@ -114,9 +115,10 @@ export default function Navbar() {
               </Link>
               <button 
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-white/70 hover:text-white hover:bg-white/5 rounded-full cursor-pointer"
+                className="p-2 text-white/70 hover:text-white hover:bg-white/5 rounded-full cursor-pointer transition-colors"
+                aria-label="Toggle navigation menu"
               >
-                {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                {mobileMenuOpen ? <X className="w-4 h-4 text-[#F97316]" /> : <Menu className="w-4 h-4" />}
               </button>
             </div>
           </div>
@@ -130,30 +132,35 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-[#0A0A0F] flex flex-col justify-center px-8 py-20 md:hidden"
+            className="fixed inset-0 z-40 bg-[#0A0A0F]/98 backdrop-blur-2xl flex flex-col justify-center px-8 py-20 md:hidden"
           >
-            <div className="flex flex-col gap-8 text-center">
+            <div className="flex flex-col gap-7 text-center max-w-sm mx-auto w-full">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#F97316] font-semibold">
+                Menu
+              </span>
+
               {navLinks.map((link) => (
                 <a 
                   key={link.id}
                   href={link.href} 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-lg font-light text-white/70 hover:text-white"
+                  className="font-display text-2xl font-light tracking-tight text-white/80 hover:text-white transition-colors"
                 >
                   {link.label}
                 </a>
               ))}
               
-              <div className="h-px bg-white/5 my-4" />
+              <div className="h-px bg-white/10 my-2" />
               
               <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="ghost" size="lg" className="w-full rounded-full border-white/10 text-white/80 shadow-none">
-                  Log In
+                <Button variant="ghost" size="lg" className="w-full rounded-full border border-white/10 text-white/80 hover:text-white shadow-none text-xs font-mono uppercase tracking-[0.15em] font-semibold">
+                  Log in
                 </Button>
               </Link>
+              
               <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
-                <Button size="lg" className="w-full rounded-full bg-[#F97316] hover:bg-[#EA580C] text-white shadow-none">
-                  Get Started Free
+                <Button size="lg" className="w-full rounded-full bg-[#F97316] hover:bg-[#EA580C] text-white text-xs font-mono uppercase tracking-[0.15em] font-bold shadow-none">
+                  Get Started
                 </Button>
               </Link>
             </div>
