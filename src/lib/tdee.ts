@@ -115,10 +115,13 @@ function formatDisplayDate(dateStr: string): string {
   return new Date(y, m - 1, d).toLocaleDateString("en-US", { month: "short", day: "numeric" })
 }
 
-export async function mifflinStJeor(profile: any): Promise<number> {
+function calculateMifflinStJeor(profile: any, currentWeight?: number): number {
   if (!profile) return 2050
-  const startWeight = profile.init_weight || profile.start_weight || profile.weight || 150
-  const weightKg = (profile.units === "lbs" || !profile.units) ? startWeight * 0.453592 : startWeight
+  const weight = currentWeight != null && currentWeight > 0
+    ? currentWeight
+    : (profile.init_weight || profile.start_weight || profile.weight || 150)
+  const isKg = profile.units === "kg" || profile.units === "kgs"
+  const weightKg = (profile.units === "lbs" || !profile.units) ? weight * 0.453592 : weight
   const heightCm = profile.height_cm || 175
   const age = profile.age || 25
   const rawActivity = parseFloat(profile.activity)
@@ -128,8 +131,12 @@ export async function mifflinStJeor(profile: any): Promise<number> {
   return Math.round(activity * (10 * weightKg + 6.25 * heightCm - 5 * age + genderBonus))
 }
 
+export async function mifflinStJeor(profile: any, currentWeight?: number): Promise<number> {
+  return calculateMifflinStJeor(profile, currentWeight)
+}
+
 export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {}) {
-  const formulaTDEE = await mifflinStJeor(profile)
+  const formulaTDEE = calculateMifflinStJeor(profile)
   const startWeight = profile?.init_weight
 
   const isKg = profile?.units === "kg" || profile?.units === "kgs"
@@ -233,25 +240,29 @@ export async function calculateAdaptiveTDEE(logs: any[] = [], profile: any = {})
   const dataWeight = Math.min(0.95, validLoggedCount / 42)
   const finalTDEE = Math.round((formulaTDEE * (1 - dataWeight) + currentAdaptedTDEE * dataWeight) / 5) * 5
 
-  const tdeeHistory: Array<{ week: string; date: string; tdee: number }> = []
+  const tdeeHistory: Array<{ week: string; date: string; tdee: number; formula: number }> = []
   for (let idx = 6; idx < dailyState.length; idx += 7) {
     const s = dailyState[idx]
     const dtFormatted = formatDisplayDate(s.date)
+    const formulaAtWeek = calculateMifflinStJeor(profile, s.weightTrend ?? startWeight)
     tdeeHistory.push({
       week: `Wk ${tdeeHistory.length + 1}`,
       date: dtFormatted,
       tdee: Math.round(s.tdeeTrend / 5) * 5,
+      formula: formulaAtWeek,
     })
   }
   if (dailyState.length > 0) {
     const s = dailyState[dailyState.length - 1]
     const dtFormatted = formatDisplayDate(s.date)
     const lastHist = tdeeHistory[tdeeHistory.length - 1]
+    const formulaAtWeek = calculateMifflinStJeor(profile, s.weightTrend ?? startWeight)
     if (!lastHist || lastHist.date !== dtFormatted) {
       tdeeHistory.push({
         week: `Wk ${tdeeHistory.length + 1}`,
         date: dtFormatted,
         tdee: Math.round(s.tdeeTrend / 5) * 5,
+        formula: formulaAtWeek,
       })
     }
   }
