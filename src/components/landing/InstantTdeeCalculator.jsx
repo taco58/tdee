@@ -123,12 +123,11 @@ export default function InstantTdeeCalculator() {
           onChange={(e) => setActivity(e.target.value)}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-[#F97316] focus:outline-none cursor-pointer"
         >
-          <option value="1.0" className="bg-[#0D0D0D]">Sickly / Bedridden — Minimal movement, illness recovery, or bed rest</option>
-          <option value="1.2" className="bg-[#0D0D0D]">Sedentary — &lt; 5,000 steps/day · Desk job, no formal exercise</option>
+          <option value="1.2" className="bg-[#0D0D0D]">Sedentary — &lt; 5,000 steps/day · Desk job, no formal workouts</option>
           <option value="1.375" className="bg-[#0D0D0D]">Lightly Active — 5,000–7,500 steps/day · Light exercise 1–3 days/wk</option>
-          <option value="1.55" className="bg-[#0D0D0D]">Moderately Active — 7,500–10,000 steps/day · Moderate exercise 3–5 days/wk</option>
-          <option value="1.725" className="bg-[#0D0D0D]">Very Active — 10,000–14,000 steps/day · Hard training 6–7 days/wk</option>
-          <option value="1.9" className="bg-[#0D0D0D]">Extra Active — 14,000+ steps/day · Physical job or 2x/day athlete training</option>
+          <option value="1.55" className="bg-[#0D0D0D]">Moderately Active — 7,500–10,000 steps/day · Moderate training 3–5 days/wk</option>
+          <option value="1.725" className="bg-[#0D0D0D]">Very Active — 10,000–13,000 steps/day · Hard training 6–7 days/wk</option>
+          <option value="1.9" className="bg-[#0D0D0D]">Extra Active — 13,000+ steps/day · Heavy physical labor or 2x/day athlete</option>
         </select>
       </div>
 

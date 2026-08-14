@@ -32,19 +32,31 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-3">
+            <h4 className="text-[10px] uppercase tracking-[0.2em] font-mono font-semibold text-[#F97316]/70 mb-4">Calculators</h4>
+            <ul className="flex flex-col gap-2.5 text-xs text-white/60">
+              <li><Link href="/calorie-deficit-calculator" className="hover:text-white transition-colors">Calorie Deficit Calculator</Link></li>
+              <li><Link href="/bulking-calculator" className="hover:text-white transition-colors">Bulking Calculator</Link></li>
+              <li><Link href="/macro-calculator" className="hover:text-white transition-colors">Macro Calculator</Link></li>
+              <li><Link href="/bmr-calculator" className="hover:text-white transition-colors">BMR Calculator</Link></li>
+              <li><Link href="/reverse-diet-calculator" className="hover:text-white transition-colors">Reverse Diet Calculator</Link></li>
+            </ul>
+          </div>
+
+          <div className="md:col-span-2">
             <h4 className="text-[10px] uppercase tracking-[0.2em] font-mono font-semibold text-[#F97316]/70 mb-4">Navigation</h4>
-            <ul className="flex flex-col gap-3 text-sm text-white/60">
-              <li><a href="#how-it-works" className="hover:text-white transition-colors">How it works</a></li>
-              <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+            <ul className="flex flex-col gap-2.5 text-xs text-white/60">
+              <li><Link href="/#how-it-works" className="hover:text-white transition-colors">How it works</Link></li>
+              <li><Link href="/#features" className="hover:text-white transition-colors">Features</Link></li>
+              <li><Link href="/#faq" className="hover:text-white transition-colors">FAQ</Link></li>
               <li><Link href="/signup" className="hover:text-white transition-colors">Sign up</Link></li>
               <li><Link href="/login" className="hover:text-white transition-colors">Log in</Link></li>
             </ul>
           </div>
 
-          <div className="md:col-span-4">
+          <div className="md:col-span-2">
             <h4 className="text-[10px] uppercase tracking-[0.2em] font-mono font-semibold text-[#F97316]/70 mb-4">Platform</h4>
-            <p className="text-xs text-white/35">
-              Free to use. No credit card required.
+            <p className="text-xs text-white/35 leading-relaxed">
+              100% Free to use. No subscription paywalls.
             </p>
           </div>
         </div>
