@@ -34,6 +34,8 @@ export default function Footer() {
           <div className="md:col-span-3">
             <h4 className="text-[10px] uppercase tracking-[0.2em] font-mono font-semibold text-[#F97316]/70 mb-4">Calculators</h4>
             <ul className="flex flex-col gap-2.5 text-xs text-white/60">
+              <li><Link href="/tdee-calculator" className="hover:text-white transition-colors">TDEE Calculator</Link></li>
+              <li><Link href="/adaptive-tdee" className="hover:text-white transition-colors">Adaptive TDEE</Link></li>
               <li><Link href="/calorie-deficit-calculator" className="hover:text-white transition-colors">Calorie Deficit Calculator</Link></li>
               <li><Link href="/bulking-calculator" className="hover:text-white transition-colors">Bulking Calculator</Link></li>
               <li><Link href="/macro-calculator" className="hover:text-white transition-colors">Macro Calculator</Link></li>

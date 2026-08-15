@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { Button } from "../ui/Button"
 import Link from "next/link"
 
-import InstantTdeeCalculator from "./InstantTdeeCalculator"
+import InstantTdeeCalculator from "@/components/calculators/InstantTdeeCalculator"
 
 export default function Hero() {
   return (
@@ -19,11 +19,11 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
         >
           <p className="eyebrow mb-4">
-            SMART METABOLIC FEEDBACK LOOP
+            EVIDENCE-BASED METABOLIC TRACKING
           </p>
           <h1 className="font-display text-4xl md:text-7xl font-light tracking-tight text-white mb-6 leading-[1.08]">
-            The Adaptive <br />
-            <span className="text-[#F97316] italic font-normal">TDEE Calculator</span>
+            Find Your Real <br />
+            <span className="text-[#F97316] italic font-normal">Maintenance Calories</span>
           </h1>
         </motion.div>
 
@@ -33,7 +33,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.15 }}
         >
           <p className="max-w-[540px] mx-auto text-sm md:text-base text-white/50 mb-8 leading-relaxed font-light">
-            Calculate your baseline maintenance calories instantly below, or track your real adaptive expenditure as your body changes.
+            Most calculators estimate your burn with a generic formula. Calculate your baseline instantly below, or track your real-world adaptive expenditure over time.
           </p>
         </motion.div>
 
