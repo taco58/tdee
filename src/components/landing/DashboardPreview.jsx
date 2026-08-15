@@ -63,75 +63,75 @@ export default function DashboardPreview() {
       whileInView={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ duration: 0.7 }}
       viewport={{ once: true }}
-      className="w-full max-w-lg bg-[#0D0D12] border border-white/10 rounded-3xl p-6 md:p-7 shadow-2xl text-left relative overflow-hidden"
+      className="w-full max-w-lg bg-[#0D0D12] border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-7 shadow-2xl text-left relative overflow-hidden"
     >
       <div className="absolute -top-20 -right-20 w-48 h-48 bg-[#F97316]/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-5 relative z-10">
+      <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-white/10 mb-4 sm:mb-5 relative z-10">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[#F97316] font-semibold block">
+          <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#F97316] font-semibold block">
             EXPENDITURE ADAPTATION MODEL
           </span>
-          <h4 className="text-base font-display font-bold text-white tracking-tight mt-0.5">
+          <h4 className="text-sm sm:text-base font-display font-bold text-white tracking-tight mt-0.5">
             Real-Time Metabolic Burn
           </h4>
         </div>
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono text-emerald-400 font-medium">
+        <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[9px] sm:text-[10px] font-mono text-emerald-400 font-medium">
           <span>LIVE TRACK</span>
         </div>
       </div>
 
       {/* Main Stat Banner */}
-      <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
-        <div className="p-3.5 bg-white/[0.02] border border-white/5 rounded-2xl">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block mb-1">
-            Current Adapted TDEE
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 mb-4 sm:mb-6 relative z-10">
+        <div className="p-3 sm:p-3.5 bg-white/[0.02] border border-white/5 rounded-xl sm:rounded-2xl">
+          <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+            Adapted TDEE
           </span>
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl md:text-3xl font-display font-black text-white tabular-nums">
+            <span className="text-xl sm:text-2xl md:text-3xl font-display font-black text-white tabular-nums">
               2,680
             </span>
-            <span className="text-[11px] font-mono text-[#F97316] font-bold">kcal/day</span>
+            <span className="text-[10px] sm:text-[11px] font-mono text-[#F97316] font-bold">kcal</span>
           </div>
-          <span className="text-[10px] font-mono text-emerald-400 block mt-0.5">
-            +290 kcal above formula
+          <span className="text-[9px] sm:text-[10px] font-mono text-emerald-400 block mt-0.5">
+            +290 kcal above base
           </span>
         </div>
 
-        <div className="p-3.5 bg-white/[0.02] border border-white/5 rounded-2xl">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 block mb-1">
-            Static Formula Baseline
+        <div className="p-3 sm:p-3.5 bg-white/[0.02] border border-white/5 rounded-xl sm:rounded-2xl">
+          <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-1">
+            Formula Baseline
           </span>
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl md:text-3xl font-display font-black text-zinc-400 tabular-nums">
+            <span className="text-xl sm:text-2xl md:text-3xl font-display font-black text-zinc-400 tabular-nums">
               2,390
             </span>
-            <span className="text-[11px] font-mono text-zinc-500">kcal/day</span>
+            <span className="text-[10px] sm:text-[11px] font-mono text-zinc-500">kcal</span>
           </div>
-          <span className="text-[10px] font-mono text-zinc-500 block mt-0.5">
-            Mifflin-St Jeor estimate
+          <span className="text-[9px] sm:text-[10px] font-mono text-zinc-400 block mt-0.5">
+            Mifflin-St Jeor base
           </span>
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-[11px] font-mono mb-3 px-1">
-        <div className="flex items-center gap-2">
-          <span className="w-3 h-0.5 bg-[#F97316] rounded-full inline-block" />
-          <span className="text-zinc-300">Adapted TDEE Curve</span>
+      <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-mono mb-2.5 sm:mb-3 px-1">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <span className="w-2.5 sm:w-3 h-0.5 bg-[#F97316] rounded-full inline-block" />
+          <span className="text-zinc-300">Adapted TDEE</span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="w-3 h-0.5 border-b border-dashed border-zinc-500 inline-block" />
-          <span className="text-zinc-500">Formula Baseline</span>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <span className="w-2.5 sm:w-3 h-0.5 border-b border-dashed border-zinc-500 inline-block" />
+          <span className="text-zinc-400">Formula Base</span>
         </div>
       </div>
 
-      <div className="h-44 w-full relative z-10">
+      <div className="h-36 sm:h-44 w-full relative z-10">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={sampleData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+          <LineChart data={sampleData} margin={{ top: 8, right: 8, left: -22, bottom: 0 }}>
             <XAxis
               dataKey="week"
               stroke="#52525b"
-              fontSize={10}
+              fontSize={9}
               tickLine={false}
               axisLine={false}
               fontFamily="monospace"
@@ -139,7 +139,7 @@ export default function DashboardPreview() {
             <YAxis
               domain={[2300, 2750]}
               stroke="#52525b"
-              fontSize={10}
+              fontSize={9}
               tickLine={false}
               axisLine={false}
               fontFamily="monospace"
@@ -166,9 +166,10 @@ export default function DashboardPreview() {
         </ResponsiveContainer>
       </div>
 
-      <div className="pt-4 border-t border-white/10 mt-3 flex items-center justify-between text-[10px] font-mono text-zinc-500">
+      <div className="pt-3 sm:pt-4 border-t border-white/10 mt-2 sm:mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-0 text-[9px] sm:text-[10px] font-mono text-zinc-400">
         <span>Signal: 98% Algorithm Confidence</span>
-        <span className="text-zinc-400">56 Daily Weigh-ins Analyzed</span>
+        <span className="text-zinc-400">56 Weigh-ins Analyzed</span>
+
       </div>
     </motion.div>
   )

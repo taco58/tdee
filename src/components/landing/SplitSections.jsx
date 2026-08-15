@@ -27,9 +27,8 @@ export default function SplitSections() {
         />
       </div>
 
-      {/* Section 1: Adaptive Model Overview */}
-      <section className="relative z-10 py-28 px-6 border-t border-white/5">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+      <section className="relative z-10 py-16 sm:py-24 md:py-28 px-4 sm:px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -37,24 +36,24 @@ export default function SplitSections() {
             viewport={{ once: true }}
             className="text-left"
           >
-            <p className="eyebrow mb-4">
+            <p className="eyebrow mb-3 sm:mb-4">
               ADAPTIVE METABOLIC ENGINE
             </p>
-            <h2 className="font-display text-3xl md:text-5xl font-light text-white mb-6 leading-tight tracking-tight">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-light text-white mb-4 sm:mb-6 leading-tight tracking-tight">
               Beyond simple <span className="text-[#F97316] italic font-normal">calculators</span>.
             </h2>
-            <p className="text-sm text-white/60 leading-relaxed font-light mb-8 max-w-md">
+            <p className="text-xs sm:text-sm text-white/60 leading-relaxed font-light mb-6 sm:mb-8 max-w-md">
               Basic online tools rely on static 1990s estimates. Our multi-variable feedback system continuously aligns your target intake with actual bodyweight trends.
             </p>
 
-            <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-6 max-w-md">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 border-t border-white/10 pt-4 sm:pt-6 max-w-md">
               <div>
-                <span className="text-[#F97316] text-xs font-semibold block mb-1">Signal Noise Filtering</span>
-                <span className="text-white/40 text-[11px] font-light leading-snug block">Eliminates water weight anomalies</span>
+                <span className="text-[#F97316] text-xs font-semibold block mb-0.5 sm:mb-1">Signal Noise Filtering</span>
+                <span className="text-white/40 text-[10px] sm:text-[11px] font-light leading-snug block">Eliminates water weight anomalies</span>
               </div>
               <div>
-                <span className="text-[#F97316] text-xs font-semibold block mb-1">Continuous Recalibration</span>
-                <span className="text-white/40 text-[11px] font-light leading-snug block">Auto-adjusts as metabolism shifts</span>
+                <span className="text-[#F97316] text-xs font-semibold block mb-0.5 sm:mb-1">Continuous Recalibration</span>
+                <span className="text-white/40 text-[10px] sm:text-[11px] font-light leading-snug block">Auto-adjusts as metabolism shifts</span>
               </div>
             </div>
           </motion.div>
@@ -64,14 +63,13 @@ export default function SplitSections() {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
             viewport={{ once: true }}
-            className="flex justify-center"
+            className="flex justify-center w-full"
           >
             <DashboardPreview />
           </motion.div>
         </div>
       </section>
 
-      {/* Section 2: Clean Engine Architecture Card */}
       <section className="relative py-28 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
 
@@ -92,7 +90,6 @@ export default function SplitSections() {
                 </span>
               </div>
 
-              {/* Module 1: Noise Filter */}
               <div className="mb-4 bg-black/40 p-4 rounded-xl border border-white/5 flex items-center justify-between">
                 <div>
                   <h4 className="text-xs font-semibold text-white mb-0.5">Signal Noise & Water Weight Filter</h4>
@@ -103,7 +100,6 @@ export default function SplitSections() {
                 </span>
               </div>
 
-              {/* Module 2: Rate of Change Differential */}
               <div className="mb-4 bg-black/40 p-4 rounded-xl border border-white/5 flex items-center justify-between">
                 <div>
                   <h4 className="text-xs font-semibold text-white mb-0.5">Energy Balance Differential</h4>
@@ -114,7 +110,6 @@ export default function SplitSections() {
                 </span>
               </div>
 
-              {/* Module 3: Confidence & Calibration */}
               <div className="bg-black/40 p-4 rounded-xl border border-white/5 flex items-center justify-between">
                 <div>
                   <h4 className="text-xs font-semibold text-white mb-0.5">Dynamic Confidence Matrix</h4>
