@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter, Outfit, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -78,6 +79,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable} ${outfit.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body className="font-sans antialiased selection:bg-orange-500/30 selection:text-orange-200" suppressHydrationWarning>{children}</body>
       <Analytics />
+      <SpeedInsights />
     </html>
   );
 }
