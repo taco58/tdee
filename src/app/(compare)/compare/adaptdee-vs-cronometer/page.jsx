@@ -109,11 +109,6 @@ export default function AdaptdeeVsCronometerPage() {
                     <td className="py-4 px-6 text-emerald-400 font-mono">Exponential Moving Average (EMA)</td>
                     <td className="py-4 px-6 text-zinc-400 font-mono">Raw scale weigh-ins</td>
                   </tr>
-                  <tr>
-                    <td className="py-4 px-6 font-medium text-white">Daily Logging Friction</td>
-                    <td className="py-4 px-6 text-emerald-400 font-mono">&lt; 5 seconds (2 numbers)</td>
-                    <td className="py-4 px-6 text-zinc-400">10–15 minutes (Full micronutrient logs)</td>
-                  </tr>
                 </tbody>
               </table>
             </div>
