@@ -42,10 +42,12 @@ export async function updateSession(request: NextRequest) {
     const userId = user?.id
     let hasProfile = false
 
+    if (userId) {
+      supabaseResponse.headers.set('x-user-id', userId)
+    }
+
     const path = request.nextUrl.pathname
     const needsProfileCheck =
-      path.startsWith("/dashboard") ||
-      path.startsWith("/info-form") ||
       path.startsWith("/login") ||
       path.startsWith("/signup")
 

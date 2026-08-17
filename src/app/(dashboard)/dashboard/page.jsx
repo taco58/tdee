@@ -1,4 +1,5 @@
 import React from "react"
+import { redirect } from "next/navigation"
 import { getDashboardInitialData } from "@/lib/tdee"
 import DashboardClient from "./DashboardClient"
 
@@ -14,6 +15,10 @@ export default async function DashboardPage() {
     adaptiveStats = data.adaptiveStats
   } catch (err) {
     console.log("Dashboard data fetch note:", err?.message)
+  }
+
+  if (!profile) {
+    redirect("/info-form")
   }
 
   return (

@@ -1,28 +1,33 @@
 "use server"
 
 import { createClient } from "@/lib/supabase/server"
+import { headers } from "next/headers"
 
 export async function getDashboardInitialData() {
+  const headerStore = await headers()
+  const cachedUserId = headerStore.get("x-user-id")
+
   const supabase = await createClient()
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser()
-  if (authError || !user) {
-    throw new Error("Unauthorized")
+  let userId = cachedUserId
+  if (!userId) {
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      throw new Error("Unauthorized")
+    }
+    userId = user.id
   }
 
   const [logsResult, profileResult] = await Promise.all([
     supabase
       .from("logs")
       .select("date, weight, calories, unit")
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .order("date", { ascending: true }),
     supabase
       .from("profiles")
       .select()
-      .eq("id", user.id)
+      .eq("id", userId)
       .single(),
   ])
 

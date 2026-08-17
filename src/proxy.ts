@@ -16,15 +16,9 @@ export async function proxyHandler(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url))
     }
 
-    if (authenticated) {
-      if (!hasProfile && isDashboardPage) {
-        return NextResponse.redirect(new URL("/info-form", request.url))
-      }
-
-      if (isAuthPage) {
-        const destination = hasProfile ? "/dashboard" : "/info-form"
-        return NextResponse.redirect(new URL(destination, request.url))
-      }
+    if (authenticated && isAuthPage) {
+      const destination = hasProfile ? "/dashboard" : "/info-form"
+      return NextResponse.redirect(new URL(destination, request.url))
     }
 
     return supabaseResponse || NextResponse.next()
