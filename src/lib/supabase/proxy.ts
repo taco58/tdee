@@ -38,11 +38,18 @@ export async function updateSession(request: NextRequest) {
       }
     )
 
-    const { data: {user} } = await supabase.auth.getUser()
+    const { data: { user } } = await supabase.auth.getUser()
     const userId = user?.id
     let hasProfile = false
 
-    if (userId) {
+    const path = request.nextUrl.pathname
+    const needsProfileCheck =
+      path.startsWith("/dashboard") ||
+      path.startsWith("/info-form") ||
+      path.startsWith("/login") ||
+      path.startsWith("/signup")
+
+    if (userId && needsProfileCheck) {
       const { data: profile } = await supabase
         .from('profiles')
         .select('id')

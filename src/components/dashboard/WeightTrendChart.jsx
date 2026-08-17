@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState, memo } from "react"
 import { motion } from "framer-motion"
 import {
   LineChart,
@@ -90,7 +90,7 @@ const RANGE_OPTIONS = [
   { id: "all", label: "All", days: null },
 ]
 
-export default function WeightTrendChart({ weightData, weightUnit = "lbs", targetWeight = null }) {
+const WeightTrendChart = memo(function WeightTrendChart({ weightData, weightUnit = "lbs", targetWeight = null }) {
   const [selectedRange, setSelectedRange] = useState("month")
 
   const selectedDays = RANGE_OPTIONS.find((r) => r.id === selectedRange)?.days
@@ -284,4 +284,6 @@ export default function WeightTrendChart({ weightData, weightUnit = "lbs", targe
       )}
     </motion.div>
   )
-}
+})
+
+export default WeightTrendChart

@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useState, memo } from "react"
 import { motion } from "framer-motion"
 import {
   LineChart,
@@ -57,7 +57,7 @@ const RANGE_OPTIONS = [
   { id: "all", label: "All", weeks: null },
 ]
 
-export default function TdeeTrendChart({ tdeeData = [], formulaEstimate = 2050, weeksOfData = 0 }) {
+const TdeeTrendChart = memo(function TdeeTrendChart({ tdeeData = [], formulaEstimate = 2050, weeksOfData = 0 }) {
   const [selectedRange, setSelectedRange] = React.useState("all")
 
   const selectedWeeks = RANGE_OPTIONS.find((r) => r.id === selectedRange)?.weeks
@@ -229,5 +229,7 @@ export default function TdeeTrendChart({ tdeeData = [], formulaEstimate = 2050, 
       )}
     </motion.div>
   )
-}
+})
+
+export default TdeeTrendChart
 

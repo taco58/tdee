@@ -12,25 +12,8 @@ import LogTodaySection from "@/components/dashboard/LogTodaySection"
 import LogHistoryCalendar from "@/components/dashboard/LogHistoryCalendar"
 import { createLogEntry } from "@/lib/profile-actions"
 
-const WeightTrendChart = dynamic(() => import("@/components/dashboard/WeightTrendChart"), {
-  ssr: false,
-  loading: () => (
-    <div className="h-[280px] bg-[#0D0D12] border border-white/5 rounded-3xl p-6 flex flex-col justify-between animate-pulse">
-      <div className="h-4 w-32 bg-white/10 rounded" />
-      <div className="h-44 w-full bg-white/[0.02] rounded-2xl" />
-    </div>
-  ),
-})
-
-const TdeeTrendChart = dynamic(() => import("@/components/dashboard/TdeeTrendChart"), {
-  ssr: false,
-  loading: () => (
-    <div className="h-[280px] bg-[#0D0D12] border border-white/5 rounded-3xl p-6 flex flex-col justify-between animate-pulse">
-      <div className="h-4 w-32 bg-white/10 rounded" />
-      <div className="h-44 w-full bg-white/[0.02] rounded-2xl" />
-    </div>
-  ),
-})
+import WeightTrendChart from "@/components/dashboard/WeightTrendChart"
+import TdeeTrendChart from "@/components/dashboard/TdeeTrendChart"
 
 const DashboardInfoModal = dynamic(() => import("@/components/dashboard/DashboardInfoModal"), {
   ssr: false,
