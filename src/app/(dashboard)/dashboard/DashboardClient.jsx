@@ -2,18 +2,43 @@
 
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import dynamic from "next/dynamic"
 
 import DashboardHeader from "@/components/dashboard/DashboardHeader"
 import AnnouncementBanner from "@/components/dashboard/AnnouncementBanner"
 import HeroStat from "@/components/dashboard/HeroStat"
 import StatGrid from "@/components/dashboard/StatGrid"
-import WeightTrendChart from "@/components/dashboard/WeightTrendChart"
-import TdeeTrendChart from "@/components/dashboard/TdeeTrendChart"
-import LogHistoryCalendar from "@/components/dashboard/LogHistoryCalendar"
 import LogTodaySection from "@/components/dashboard/LogTodaySection"
-import DashboardInfoModal from "@/components/dashboard/DashboardInfoModal"
-import CsvImportExportModal from "@/components/dashboard/CsvImportExport"
+import LogHistoryCalendar from "@/components/dashboard/LogHistoryCalendar"
 import { createLogEntry } from "@/lib/profile-actions"
+
+const WeightTrendChart = dynamic(() => import("@/components/dashboard/WeightTrendChart"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[280px] bg-[#0D0D12] border border-white/5 rounded-3xl p-6 flex flex-col justify-between animate-pulse">
+      <div className="h-4 w-32 bg-white/10 rounded" />
+      <div className="h-44 w-full bg-white/[0.02] rounded-2xl" />
+    </div>
+  ),
+})
+
+const TdeeTrendChart = dynamic(() => import("@/components/dashboard/TdeeTrendChart"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[280px] bg-[#0D0D12] border border-white/5 rounded-3xl p-6 flex flex-col justify-between animate-pulse">
+      <div className="h-4 w-32 bg-white/10 rounded" />
+      <div className="h-44 w-full bg-white/[0.02] rounded-2xl" />
+    </div>
+  ),
+})
+
+const DashboardInfoModal = dynamic(() => import("@/components/dashboard/DashboardInfoModal"), {
+  ssr: false,
+})
+
+const CsvImportExportModal = dynamic(() => import("@/components/dashboard/CsvImportExport"), {
+  ssr: false,
+})
 
 const getLocalDateString = (d = new Date()) => {
   const year = d.getFullYear()
@@ -110,7 +135,6 @@ export default function DashboardClient({
     [initialAdaptiveStats, initialLogs, initialProfile, weightUnit]
   )
 
-  // Goal & Target Calorie State
   const [goalType, setGoalType] = useState("maintain")
   const [goalRate, setGoalRate] = useState(isKg ? 0.5 : 1.0)
   const [targetWeight, setTargetWeight] = useState("")
@@ -135,7 +159,6 @@ export default function DashboardClient({
       if (typeof window !== "undefined") {
         localStorage.setItem("adaptdee_user_goal", newType)
       }
-      // If goal type changed and no new target weight was explicitly provided, reset target weight
       if (newTargetWeight === undefined && newType !== goalType) {
         setTargetWeight("")
         if (typeof window !== "undefined") {
@@ -162,7 +185,6 @@ export default function DashboardClient({
     }
   }
 
-  // Derived Goal Calculations
   const baseTdee = stats.tdee || 2000
   const kcalPerUnit = isKg ? 7700 : 3500
   const activeRateNum = isNaN(goalRate) ? 0 : goalRate
@@ -350,18 +372,20 @@ export default function DashboardClient({
               weeksOfData={stats.weeksOfData}
             />
 
-            <LogHistoryCalendar
-              calendarDays={calendarDays}
-              selectedCalendarDay={selectedCalendarDay}
-              onSelectDay={handleSelectDay}
-              editDayWeight={editDayWeight}
-              setEditDayWeight={setEditDayWeight}
-              editDayCalories={editDayCalories}
-              setEditDayCalories={setEditDayCalories}
-              onSaveEntry={handleSaveCalendarEntry}
-              onCancelEntry={() => setSelectedCalendarDay(null)}
-              weightUnit={weightUnit}
-            />
+            <div style={{ contentVisibility: "auto", containIntrinsicSize: "0 350px" }}>
+              <LogHistoryCalendar
+                calendarDays={calendarDays}
+                selectedCalendarDay={selectedCalendarDay}
+                onSelectDay={handleSelectDay}
+                editDayWeight={editDayWeight}
+                setEditDayWeight={setEditDayWeight}
+                editDayCalories={editDayCalories}
+                setEditDayCalories={setEditDayCalories}
+                onSaveEntry={handleSaveCalendarEntry}
+                onCancelEntry={() => setSelectedCalendarDay(null)}
+                weightUnit={weightUnit}
+              />
+            </div>
           </div>
 
           <div className="space-y-6 order-1 md:order-2 md:sticky md:top-24 md:h-fit mb-6 md:mb-0">

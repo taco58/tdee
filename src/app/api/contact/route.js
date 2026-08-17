@@ -16,7 +16,6 @@ export async function POST(request) {
       );
     }
 
-    // Input length caps to prevent abuse
     if (name.length > 200) {
       return NextResponse.json({ error: "Name is too long." }, { status: 400 });
     }

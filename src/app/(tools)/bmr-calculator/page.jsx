@@ -50,7 +50,6 @@ export default function BmrCalculatorPage() {
 
       <Navbar />
 
-      {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 md:px-6">
         <div className="max-w-4xl mx-auto text-center relative z-10 mb-10">
           <p className="eyebrow mb-3 text-[#F97316]">

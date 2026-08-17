@@ -2,6 +2,44 @@
 
 import { createClient } from "@/lib/supabase/server"
 
+export async function getDashboardInitialData() {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
+  if (authError || !user) {
+    throw new Error("Unauthorized")
+  }
+
+  const [logsResult, profileResult] = await Promise.all([
+    supabase
+      .from("logs")
+      .select("date, weight, calories, unit")
+      .eq("user_id", user.id)
+      .order("date", { ascending: true }),
+    supabase
+      .from("profiles")
+      .select()
+      .eq("id", user.id)
+      .single(),
+  ])
+
+  if (logsResult.error) {
+    console.error("DB Error (logs):", logsResult.error.message)
+  }
+  if (profileResult.error) {
+    console.error("DB Error (profile):", profileResult.error.message)
+  }
+
+  const logs = logsResult.data || []
+  const profile = profileResult.data || null
+  const adaptiveStats = await calculateAdaptiveTDEE(logs, profile)
+
+  return { logs, profile, adaptiveStats }
+}
+
 export async function getLogsData() {
   const supabase = await createClient()
 
@@ -16,6 +54,7 @@ export async function getLogsData() {
   const { data: logs, error } = await supabase
     .from("logs")
     .select("date, weight, calories, unit")
+    .eq("user_id", user.id)
     .order("date", { ascending: true })
 
   if (error) {
