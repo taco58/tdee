@@ -1,9 +1,9 @@
 "use client"
 
-import React from "react"
+import React, { memo } from "react"
 import { motion } from "framer-motion"
 
-export default function StatGrid({ stats }) {
+const StatGrid = memo(function StatGrid({ stats }) {
   const cards = [
     {
       title: "AVG WEIGHT",
@@ -79,4 +79,6 @@ export default function StatGrid({ stats }) {
       ))}
     </motion.div>
   )
-}
+})
+
+export default StatGrid

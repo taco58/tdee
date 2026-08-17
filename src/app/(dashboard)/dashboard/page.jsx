@@ -17,10 +17,6 @@ export default async function DashboardPage() {
     console.log("Dashboard data fetch note:", err?.message)
   }
 
-  if (!profile) {
-    redirect("/info-form")
-  }
-
   return (
     <DashboardClient
       initialLogs={logs}

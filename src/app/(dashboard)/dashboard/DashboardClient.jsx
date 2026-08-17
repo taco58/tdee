@@ -226,32 +226,23 @@ export default function DashboardClient({
     [initialLogs, todayStr]
   )
 
-  const [isEditingToday, setIsEditingToday] = useState(false)
-  const [logPanelOpen, setLogPanelOpen] = useState(false)
-  const [inputWeight, setInputWeight] = useState(
-    isLoggedToday
-      ? convertUnits(
-          initialLogs.find((l) => l.date === todayStr)?.weight,
-          initialLogs.find((l) => l.date === todayStr)?.unit,
-          weightUnit
-        )
-      : ""
+  const todayLog = React.useMemo(
+    () => initialLogs.find((l) => l.date === todayStr),
+    [initialLogs, todayStr]
   )
-  const [inputCalories, setInputCalories] = useState(
-    isLoggedToday ? initialLogs.find((l) => l.date === todayStr)?.calories : ""
-  )
+
+  const initialWeight = todayLog && todayLog.weight != null
+    ? convertUnits(todayLog.weight, todayLog.unit, weightUnit)
+    : ""
+  const initialCalories = todayLog?.calories ?? ""
 
   const [selectedCalendarDay, setSelectedCalendarDay] = useState(null)
   const [editDayWeight, setEditDayWeight] = useState("")
   const [editDayCalories, setEditDayCalories] = useState("")
 
-  const handleSaveTodayLog = async (e) => {
-    e.preventDefault()
-    setIsEditingToday(false)
-    setLogPanelOpen(false)
-
-    const parsedWeight = inputWeight !== "" ? parseFloat(inputWeight) : NaN
-    const parsedCalories = inputCalories !== "" ? parseInt(inputCalories, 10) : NaN
+  const handleSaveTodayLog = async ({ weight, calories }) => {
+    const parsedWeight = weight !== "" ? parseFloat(weight) : NaN
+    const parsedCalories = calories !== "" ? parseInt(calories, 10) : NaN
     const hasWeight = !isNaN(parsedWeight) && parsedWeight > 0
     const hasCalories = !isNaN(parsedCalories) && parsedCalories >= 0
 
@@ -264,10 +255,6 @@ export default function DashboardClient({
         unit: weightUnit,
       })
       if (res?.success) {
-        if (!hasWeight && !hasCalories) {
-          setInputWeight("")
-          setInputCalories("")
-        }
         router.refresh()
       }
     } catch (err) {
@@ -323,7 +310,7 @@ export default function DashboardClient({
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-white selection:bg-[#F97316]/30 selection:text-white font-sans pb-24 md:pb-12">
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-[#F97316]/5 rounded-full blur-[100px] pointer-events-none z-0" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_30%,rgba(249,115,22,0.06),transparent)] pointer-events-none z-0" />
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none z-0" />
 
       <AnnouncementBanner
@@ -355,20 +342,18 @@ export default function DashboardClient({
               weeksOfData={stats.weeksOfData}
             />
 
-            <div style={{ contentVisibility: "auto", containIntrinsicSize: "0 350px" }}>
-              <LogHistoryCalendar
-                calendarDays={calendarDays}
-                selectedCalendarDay={selectedCalendarDay}
-                onSelectDay={handleSelectDay}
-                editDayWeight={editDayWeight}
-                setEditDayWeight={setEditDayWeight}
-                editDayCalories={editDayCalories}
-                setEditDayCalories={setEditDayCalories}
-                onSaveEntry={handleSaveCalendarEntry}
-                onCancelEntry={() => setSelectedCalendarDay(null)}
-                weightUnit={weightUnit}
-              />
-            </div>
+            <LogHistoryCalendar
+              calendarDays={calendarDays}
+              selectedCalendarDay={selectedCalendarDay}
+              onSelectDay={handleSelectDay}
+              editDayWeight={editDayWeight}
+              setEditDayWeight={setEditDayWeight}
+              editDayCalories={editDayCalories}
+              setEditDayCalories={setEditDayCalories}
+              onSaveEntry={handleSaveCalendarEntry}
+              onCancelEntry={() => setSelectedCalendarDay(null)}
+              weightUnit={weightUnit}
+            />
           </div>
 
           <div className="space-y-6 order-1 md:order-2 md:sticky md:top-24 md:h-fit mb-6 md:mb-0">
@@ -380,14 +365,9 @@ export default function DashboardClient({
             
             <LogTodaySection
               key={`${todayStr}-${weightUnit}`}
-              isLoggedToday={isLoggedToday && !isEditingToday}
-              setIsLoggedToday={() => setIsEditingToday(true)}
-              logPanelOpen={logPanelOpen}
-              setLogPanelOpen={setLogPanelOpen}
-              inputWeight={inputWeight}
-              setInputWeight={setInputWeight}
-              inputCalories={inputCalories}
-              setInputCalories={setInputCalories}
+              isLoggedToday={isLoggedToday}
+              initialWeight={initialWeight}
+              initialCalories={initialCalories}
               onSaveTodayLog={handleSaveTodayLog}
               weightUnit={weightUnit}
               targetCalories={goalInfo.targetCalories}

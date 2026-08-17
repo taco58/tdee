@@ -1,10 +1,10 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, memo } from "react"
 import { motion } from "framer-motion"
 import { Calendar, Flag, Sparkles } from "lucide-react"
 
-export default function HeroStat({ stats, goalInfo, onUpdateGoal }) {
+const HeroStat = memo(function HeroStat({ stats, goalInfo, onUpdateGoal }) {
   const isKg = stats?.unit === "kg" || stats?.unit === "kgs"
   const unitLabel = isKg ? "kg/wk" : "lbs/wk"
   const weightUnit = stats?.unit || (isKg ? "kg" : "lbs")
@@ -294,5 +294,7 @@ export default function HeroStat({ stats, goalInfo, onUpdateGoal }) {
       </div>
     </motion.div>
   )
-}
+})
+
+export default HeroStat
 

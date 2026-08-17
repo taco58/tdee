@@ -1,30 +1,41 @@
 "use client"
 
-import React from "react"
+import React, { useState, memo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowRight, Check, X, Sparkles } from "lucide-react"
+import { ArrowRight, Check, X } from "lucide-react"
 
-export default function LogTodaySection({
-  isLoggedToday,
-  setIsLoggedToday,
-  logPanelOpen,
-  setLogPanelOpen,
-  inputWeight,
-  setInputWeight,
-  inputCalories,
-  setInputCalories,
+const LogTodaySection = memo(function LogTodaySection({
+  isLoggedToday: initialIsLoggedToday = false,
+  initialWeight = "",
+  initialCalories = "",
   onSaveTodayLog,
   weightUnit = "lbs",
   targetCalories = null,
 }) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [logPanelOpen, setLogPanelOpen] = useState(false)
+  const [inputWeight, setInputWeight] = useState(initialWeight ? `${initialWeight}` : "")
+  const [inputCalories, setInputCalories] = useState(initialCalories ? `${initialCalories}` : "")
+
   const displayUnit = weightUnit.toUpperCase()
   const parsedInputCalories = inputCalories !== "" ? parseInt(inputCalories, 10) : NaN
   const hasValidCalories = !isNaN(parsedInputCalories) && parsedInputCalories >= 0
 
+  const isLogged = initialIsLoggedToday && !isEditing
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setIsEditing(false)
+    setLogPanelOpen(false)
+    if (onSaveTodayLog) {
+      onSaveTodayLog({ weight: inputWeight, calories: inputCalories })
+    }
+  }
+
   return (
     <>
       <div className="hidden md:block">
-        {!isLoggedToday ? (
+        {!isLogged ? (
           <div className="bg-[#0D0D0D] border border-[#F97316]/30 rounded-2xl p-5 shadow-xl relative overflow-hidden">
             <div className="flex items-center gap-2 mb-3">
               <span className="w-2.5 h-2.5 rounded-full bg-[#F97316] animate-pulse" />
@@ -32,7 +43,7 @@ export default function LogTodaySection({
                 Log Today&apos;s Entry
               </p>
             </div>
-            <form onSubmit={onSaveTodayLog} className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-3">
               <div>
                 <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-1 font-mono">
                   WEIGHT ({displayUnit})
@@ -101,7 +112,7 @@ export default function LogTodaySection({
                 </span>
               </div>
               <button
-                onClick={() => setIsLoggedToday(false)}
+                onClick={() => setIsEditing(true)}
                 className="text-xs text-[#F97316] hover:underline font-semibold cursor-pointer"
               >
                 Edit
@@ -135,7 +146,7 @@ export default function LogTodaySection({
 
       <div className="md:hidden">
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 max-w-[440px] w-[90%] pointer-events-auto">
-          {!isLoggedToday ? (
+          {!isLogged ? (
             <button
               onClick={() => setLogPanelOpen(true)}
               className="w-full rounded-full bg-[#F97316] hover:bg-[#EA580C] shadow-[0_0_25px_rgba(249,115,22,0.5)] px-6 py-3.5 flex items-center justify-between text-white font-bold text-sm cursor-pointer active:scale-95 transition-all"
@@ -167,6 +178,7 @@ export default function LogTodaySection({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
                 onClick={() => setLogPanelOpen(false)}
                 className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50"
               />
@@ -175,7 +187,7 @@ export default function LogTodaySection({
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 exit={{ y: "100%" }}
-                transition={{ type: "spring", damping: 26, stiffness: 300 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
                 className="fixed bottom-0 left-0 right-0 bg-[#0D0D0D] border-t border-white/10 rounded-t-3xl p-6 z-50 max-w-lg mx-auto shadow-2xl"
               >
                 <div className="w-10 h-1 bg-white/20 rounded-full mx-auto mb-6" />
@@ -189,13 +201,13 @@ export default function LogTodaySection({
                   </div>
                   <button
                     onClick={() => setLogPanelOpen(false)}
-                    className="p-2 text-zinc-400 hover:text-white rounded-full bg-white/5 border border-white/10"
+                    className="p-2 text-zinc-400 hover:text-white rounded-full bg-white/5 border border-white/10 cursor-pointer"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
 
-                <form onSubmit={onSaveTodayLog} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
                     <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-1 font-mono">
                       WEIGHT ({displayUnit})
@@ -260,4 +272,6 @@ export default function LogTodaySection({
       </div>
     </>
   )
-}
+})
+
+export default LogTodaySection

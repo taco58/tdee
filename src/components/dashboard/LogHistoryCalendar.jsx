@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, memo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   ChevronLeft,
@@ -24,7 +24,7 @@ const MONTH_NAMES = [
 
 const WEEKDAY_LABELS = ["M", "T", "W", "T", "F", "S", "S"]
 
-export default function LogHistoryCalendar({
+const LogHistoryCalendar = memo(function LogHistoryCalendar({
   calendarDays = [],
   selectedCalendarDay,
   onSelectDay,
@@ -319,6 +319,8 @@ export default function LogHistoryCalendar({
       </AnimatePresence>
     </motion.div>
   )
-}
+})
+
+export default LogHistoryCalendar
 
 
