@@ -6,6 +6,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  Trash2,
+  AlertTriangle,
 } from "lucide-react"
 
 function getDaysInMonth(year, month) {
@@ -24,6 +26,12 @@ const MONTH_NAMES = [
 
 const WEEKDAY_LABELS = ["M", "T", "W", "T", "F", "S", "S"]
 
+function formatDateLabel(dateStr) {
+  if (!dateStr) return ""
+  const [y, m, d] = dateStr.split("-").map(Number)
+  return `${MONTH_NAMES[m - 1].slice(0, 3)} ${d}, ${y}`
+}
+
 const LogHistoryCalendar = memo(function LogHistoryCalendar({
   calendarDays = [],
   selectedCalendarDay,
@@ -34,6 +42,7 @@ const LogHistoryCalendar = memo(function LogHistoryCalendar({
   setEditDayCalories,
   onSaveEntry,
   onCancelEntry,
+  onDeleteRange,
   weightUnit = "lbs",
 }) {
   const today = useMemo(() => new Date(), [])
@@ -43,6 +52,11 @@ const LogHistoryCalendar = memo(function LogHistoryCalendar({
 
   const [viewYear, setViewYear] = useState(todayYear)
   const [viewMonth, setViewMonth] = useState(todayMonth)
+
+  const [isRangeMode, setIsRangeMode] = useState(false)
+  const [rangeStart, setRangeStart] = useState(null)
+  const [rangeEnd, setRangeEnd] = useState(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const { daysInMonth, startOffset } = useMemo(() => {
     return {
@@ -78,6 +92,51 @@ const LogHistoryCalendar = memo(function LogHistoryCalendar({
     }
     onCancelEntry()
   }
+
+  const exitRangeMode = () => {
+    setIsRangeMode(false)
+    setRangeStart(null)
+    setRangeEnd(null)
+    setIsDeleting(false)
+  }
+
+  const handleRangeDayClick = (day) => {
+    if (day.isFuture) return
+    if (!rangeStart) {
+      setRangeStart(day.dateStr)
+      setRangeEnd(null)
+    } else if (!rangeEnd) {
+      if (day.dateStr < rangeStart) {
+        setRangeEnd(rangeStart)
+        setRangeStart(day.dateStr)
+      } else {
+        setRangeEnd(day.dateStr)
+      }
+    } else {
+      setRangeStart(day.dateStr)
+      setRangeEnd(null)
+    }
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!rangeStart || !rangeEnd || !onDeleteRange) return
+    setIsDeleting(true)
+    await onDeleteRange(rangeStart, rangeEnd)
+    exitRangeMode()
+  }
+
+  const rangeLogCount = useMemo(() => {
+    if (!rangeStart || !rangeEnd) return 0
+    return calendarDays.filter((d) => {
+      const ds = d.dateStr || d.date
+      if (!ds) return false
+      const isInRange = ds >= rangeStart && ds <= rangeEnd
+      const isLogged = d.isLogged !== undefined
+        ? d.isLogged
+        : d.weight != null || d.calories != null
+      return isInRange && isLogged
+    }).length
+  }, [calendarDays, rangeStart, rangeEnd])
 
   const viewDays = useMemo(() => {
     const days = []
@@ -140,6 +199,18 @@ const LogHistoryCalendar = memo(function LogHistoryCalendar({
             </div>
 
             <div className="flex items-center gap-1">
+              {onDeleteRange && (
+                <button
+                  onClick={() => isRangeMode ? exitRangeMode() : (setIsRangeMode(true), onCancelEntry())}
+                  className={`w-7 h-7 flex items-center justify-center transition-colors rounded-lg cursor-pointer ${
+                    isRangeMode
+                      ? "text-red-400 bg-red-500/10 hover:bg-red-500/20"
+                      : "text-zinc-500 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
               <button
                 onClick={goToPrevMonth}
                 className="w-7 h-7 flex items-center justify-center text-zinc-500 hover:text-white transition-colors rounded-lg hover:bg-white/5 cursor-pointer"
@@ -159,6 +230,16 @@ const LogHistoryCalendar = memo(function LogHistoryCalendar({
               </button>
             </div>
           </div>
+
+          {isRangeMode && (
+            <div className="mb-4 px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/15 text-[11px] font-mono text-red-300">
+              {!rangeStart
+                ? "Tap a start date"
+                : !rangeEnd
+                ? "Now tap an end date"
+                : `${formatDateLabel(rangeStart)} → ${formatDateLabel(rangeEnd)}`}
+            </div>
+          )}
 
           <div className="grid grid-cols-7 mb-1">
             {WEEKDAY_LABELS.map((day, i) => (
@@ -186,22 +267,38 @@ const LogHistoryCalendar = memo(function LogHistoryCalendar({
 
               {viewDays.map((day) => {
                 const isSelected =
-                  selectedCalendarDay?.dateStr === day.dateStr ||
-                  (selectedCalendarDay?.dayNumber === day.dayNumber &&
-                    !selectedCalendarDay?.dateStr &&
-                    viewYear === todayYear &&
-                    viewMonth === todayMonth)
+                  !isRangeMode &&
+                  (selectedCalendarDay?.dateStr === day.dateStr ||
+                    (selectedCalendarDay?.dayNumber === day.dayNumber &&
+                      !selectedCalendarDay?.dateStr &&
+                      viewYear === todayYear &&
+                      viewMonth === todayMonth))
+
+                const isRangeStart = isRangeMode && rangeStart === day.dateStr
+                const isRangeEnd = isRangeMode && rangeEnd === day.dateStr
+                const isInRange =
+                  isRangeMode &&
+                  rangeStart &&
+                  rangeEnd &&
+                  day.dateStr >= rangeStart &&
+                  day.dateStr <= rangeEnd
 
                 return (
                   <button
                     key={day.dayNumber}
                     disabled={day.isFuture && !day.isLogged}
-                    onClick={() => onSelectDay(day)}
+                    onClick={() =>
+                      isRangeMode ? handleRangeDayClick(day) : onSelectDay(day)
+                    }
                     className="aspect-square flex items-center justify-center cursor-pointer group p-[2px]"
                   >
                     <span
                       className={`w-full aspect-square max-w-[44px] rounded-full flex items-center justify-center text-[13px] font-medium transition-all ${
-                        isSelected
+                        isRangeStart || isRangeEnd
+                          ? "bg-red-500 text-white font-bold shadow-lg shadow-red-500/30 scale-105"
+                          : isInRange
+                          ? "bg-red-500/15 text-red-300 font-semibold ring-1 ring-red-500/30"
+                          : isSelected
                           ? "bg-orange-500 text-white font-bold shadow-lg shadow-orange-500/30 scale-105"
                           : day.isToday
                           ? "bg-[#2a2b32] text-white font-bold ring-2 ring-orange-500/50"
@@ -220,7 +317,7 @@ const LogHistoryCalendar = memo(function LogHistoryCalendar({
             </motion.div>
           </AnimatePresence>
 
-          {loggedCount > 0 && (
+          {loggedCount > 0 && !isRangeMode && (
             <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/5">
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
@@ -241,7 +338,47 @@ const LogHistoryCalendar = memo(function LogHistoryCalendar({
       </div>
 
       <AnimatePresence>
-        {selectedCalendarDay && (
+        {isRangeMode && rangeStart && rangeEnd && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="pt-4 mt-4 border-t border-red-500/20">
+              <div className="flex items-center gap-2 mb-3">
+                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                <span className="text-xs font-bold text-white">
+                  Delete {rangeLogCount} log{rangeLogCount !== 1 ? "s" : ""} from{" "}
+                  {formatDateLabel(rangeStart)} → {formatDateLabel(rangeEnd)}?
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-400 mb-3">
+                This will permanently remove all logged weight and calorie entries in this date range. This cannot be undone.
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleConfirmDelete}
+                  disabled={isDeleting || rangeLogCount === 0}
+                  className="flex-1 rounded-lg bg-red-500 hover:bg-red-400 disabled:opacity-50 disabled:cursor-not-allowed text-white py-2 text-xs font-bold transition-colors shadow-sm cursor-pointer"
+                >
+                  {isDeleting ? "Deleting..." : rangeLogCount === 0 ? "No Logs to Delete" : `Delete ${rangeLogCount} Log${rangeLogCount !== 1 ? "s" : ""}`}
+                </button>
+                <button
+                  onClick={exitRangeMode}
+                  className="px-3 py-2 text-zinc-400 hover:text-zinc-200 text-xs font-medium transition-colors cursor-pointer rounded-lg hover:bg-white/5"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {!isRangeMode && selectedCalendarDay && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -254,10 +391,7 @@ const LogHistoryCalendar = memo(function LogHistoryCalendar({
                 <span className="text-xs font-bold text-white flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-orange-400" />
                   {selectedCalendarDay.dateStr
-                    ? (() => {
-                        const [y, m, d] = selectedCalendarDay.dateStr.split("-").map(Number)
-                        return `${MONTH_NAMES[m - 1].slice(0, 3)} ${d}, ${y}`
-                      })()
+                    ? formatDateLabel(selectedCalendarDay.dateStr)
                     : `${MONTH_NAMES[viewMonth].slice(0, 3)} ${selectedCalendarDay.dayNumber}, ${viewYear}`}
                 </span>
                 <span
@@ -322,5 +456,3 @@ const LogHistoryCalendar = memo(function LogHistoryCalendar({
 })
 
 export default LogHistoryCalendar
-
-

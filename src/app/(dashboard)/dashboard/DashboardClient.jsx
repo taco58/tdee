@@ -10,7 +10,7 @@ import HeroStat from "@/components/dashboard/HeroStat"
 import StatGrid from "@/components/dashboard/StatGrid"
 import LogTodaySection from "@/components/dashboard/LogTodaySection"
 import LogHistoryCalendar from "@/components/dashboard/LogHistoryCalendar"
-import { createLogEntry } from "@/lib/profile-actions"
+import { createLogEntry, deleteLogsInRange } from "@/lib/profile-actions"
 
 import WeightTrendChart from "@/components/dashboard/WeightTrendChart"
 import TdeeTrendChart from "@/components/dashboard/TdeeTrendChart"
@@ -295,6 +295,17 @@ export default function DashboardClient({
     setSelectedCalendarDay(null)
   }
 
+  const handleDeleteRange = async (startDate, endDate) => {
+    try {
+      const res = await deleteLogsInRange(startDate, endDate)
+      if (res?.success) {
+        router.refresh()
+      }
+    } catch (err) {
+      console.log("Delete range note:", err)
+    }
+  }
+
   const [infoModalOpen, setInfoModalOpen] = useState(false)
   const [csvModalOpen, setCsvModalOpen] = useState(false)
 
@@ -352,6 +363,7 @@ export default function DashboardClient({
               setEditDayCalories={setEditDayCalories}
               onSaveEntry={handleSaveCalendarEntry}
               onCancelEntry={() => setSelectedCalendarDay(null)}
+              onDeleteRange={handleDeleteRange}
               weightUnit={weightUnit}
             />
           </div>
