@@ -1,16 +1,22 @@
 "use client";
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import DashboardPreview from './DashboardPreview';
+import dynamic from 'next/dynamic';
 import { Button } from '../ui/Button';
 import Link from 'next/link';
-import DotField from './DotField';
+
+const DotField = dynamic(() => import('./DotField'), { ssr: false });
+const DashboardPreview = dynamic(() => import('./DashboardPreview'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full max-w-lg h-[340px] bg-[#0D0D12] border border-white/10 rounded-2xl animate-pulse" />
+  ),
+});
 
 export default function SplitSections() {
   return (
     <div id="science" className="relative z-10 overflow-hidden bg-[#0A0A0F]">
-      <div className="absolute inset-0 pointer-events-none z-0 opacity-80">
+      <div className="absolute inset-0 pointer-events-none z-0 opacity-80 hidden hover-device:block">
         <DotField
           dotRadius={1.5}
           dotSpacing={16}
@@ -29,13 +35,7 @@ export default function SplitSections() {
 
       <section className="relative z-10 py-16 sm:py-24 md:py-28 px-4 sm:px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-            className="text-left"
-          >
+          <div className="text-left animate-in-view-left">
             <p className="eyebrow mb-3 sm:mb-4">
               ADAPTIVE METABOLIC ENGINE
             </p>
@@ -56,30 +56,18 @@ export default function SplitSections() {
                 <span className="text-white/40 text-[10px] sm:text-[11px] font-light leading-snug block">Auto-adjusts as metabolism shifts</span>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-            className="flex justify-center w-full"
-          >
+          <div className="flex justify-center w-full animate-in-view-right">
             <DashboardPreview />
-          </motion.div>
+          </div>
         </div>
       </section>
 
       <section className="relative py-28 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
 
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-            className="flex justify-center order-2 md:order-1"
-          >
+          <div className="flex justify-center order-2 md:order-1 animate-in-view-left">
             <div className="w-full max-w-lg bg-[#0D0D12] border border-white/10 p-7 rounded-2xl flex flex-col select-none shadow-2xl relative">
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
                 <span className="eyebrow text-[#F97316]">
@@ -125,15 +113,9 @@ export default function SplitSections() {
                 <span className="text-[#F97316]">Adaptive recalibration</span>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-            className="text-left order-1 md:order-2"
-          >
+          <div className="text-left order-1 md:order-2 animate-in-view-right">
             <p className="eyebrow mb-4">
               OBJECTIVE ACCURACY
             </p>
@@ -148,7 +130,7 @@ export default function SplitSections() {
                 Get Started
               </Button>
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>

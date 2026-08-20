@@ -1,7 +1,4 @@
-"use client"
-
 import React from "react"
-import { motion } from "framer-motion"
 
 const reviews = [
   {
@@ -54,13 +51,10 @@ export default function Testimonials() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {reviews.map((review, index) => (
-            <motion.div
+            <div
               key={review.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="p-7 bg-[#0D0D12] border border-white/5 hover:border-[#F97316]/30 transition-all rounded-2xl flex flex-col justify-between"
+              className="p-7 bg-[#0D0D12] border border-white/5 hover:border-[#F97316]/30 transition-all rounded-2xl flex flex-col justify-between animate-in-view"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <div>
                 <div className="flex items-center justify-between mb-5">
@@ -89,7 +83,7 @@ export default function Testimonials() {
                   {review.tag}
                 </span>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

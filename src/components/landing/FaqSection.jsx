@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 
 const faqs = [
   {
@@ -73,19 +72,19 @@ export default function FaqSection() {
                   </span>
                 </button>
 
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden px-6 pb-5 text-xs md:text-sm text-zinc-400 font-light font-sans leading-relaxed border-t border-white/5 pt-3"
-                    >
+                <div
+                  className="grid transition-[grid-template-rows,opacity] duration-200 ease-out"
+                  style={{
+                    gridTemplateRows: isOpen ? "1fr" : "0fr",
+                    opacity: isOpen ? 1 : 0,
+                  }}
+                >
+                  <div className="overflow-hidden">
+                    <div className="px-6 pb-5 text-xs md:text-sm text-zinc-400 font-light font-sans leading-relaxed border-t border-white/5 pt-3">
                       {faq.a}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                    </div>
+                  </div>
+                </div>
               </div>
             )
           })}

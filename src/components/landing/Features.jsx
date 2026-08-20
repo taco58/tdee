@@ -1,7 +1,4 @@
-"use client"
-
 import React from "react"
-import { motion } from "framer-motion"
 
 const features = [
   {
@@ -9,28 +6,28 @@ const features = [
     title: "Dual-Filter Metabolic Engine",
     description:
       "Exponential moving average algorithms dampen daily water, sodium, and glycogen fluctuations to reveal your true underlying expenditure.",
-    delay: 0.05,
+    delay: 50,
   },
   {
     tag: "02 / TARGETS",
     title: "Dynamic Goal Planning & ETA",
     description:
       "Set your desired rate of weight loss, gain, or maintenance. Calorie budgets and target milestone dates adjust continuously as your TDEE shifts.",
-    delay: 0.1,
+    delay: 100,
   },
   {
     tag: "03 / BASELINE",
     title: "Weight-Adjusted Formula Curve",
     description:
       "Unlike static 1-time calculators, our baseline dynamically recalculates with your rolling weight to accurately measure metabolic adaptation.",
-    delay: 0.15,
+    delay: 150,
   },
   {
     tag: "04 / DATA",
     title: "1-Click CSV Import & Export",
     description:
       "Seamlessly migrate your history from MyFitnessPal, MacroFactor, Cronometer, or Excel spreadsheets with zero data lock-in.",
-    delay: 0.2,
+    delay: 200,
   },
 ]
 
@@ -52,13 +49,10 @@ export default function Features() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {features.map((feature) => (
-            <motion.div
+            <div
               key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: feature.delay }}
-              viewport={{ once: true }}
-              className="flex flex-col"
+              className="flex flex-col animate-in-view"
+              style={{ animationDelay: `${feature.delay}ms` }}
             >
               <div className="p-6 bg-[#0D0D12] border border-white/5 hover:border-white/15 transition-all flex flex-col h-full text-left rounded-2xl shadow-lg">
                 <span className="text-[10px] font-mono font-semibold text-[#F97316] tracking-widest uppercase mb-4">
@@ -71,7 +65,7 @@ export default function Features() {
                   {feature.description}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

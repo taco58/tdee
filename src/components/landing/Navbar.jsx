@@ -47,6 +47,7 @@ export default function Navbar() {
                   alt="Logo" 
                   width={64} 
                   height={64} 
+                  priority
                   style={{ width: "auto", height: "auto" }}
                   className="rounded-full object-cover shrink-0 filter brightness-110"
                 />

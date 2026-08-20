@@ -1,55 +1,52 @@
-"use client"
-
 import React from "react"
-import { motion } from "framer-motion"
 import { Check, X } from "lucide-react"
 
-export default function ComparisonTable() {
-  const rows = [
-    {
-      feature: "Continuous Metabolic Adaptation (EMA)",
-      generic: false,
-      excel: "Manual edits",
-      adaptdee: "Automated real-time engine",
-    },
-    {
-      feature: "Dynamic Weight-Adjusted Formula Baseline",
-      generic: false,
-      excel: false,
-      adaptdee: "Weekly dynamic recalibration",
-    },
-    {
-      feature: "Target Caloric Budget & Deficit Planner",
-      generic: false,
-      excel: "Static formulas",
-      adaptdee: "Custom paces with live ETA",
-    },
-    {
-      feature: "Noise & Water Weight Fluctuations Dampened",
-      generic: false,
-      excel: "Basic averages",
-      adaptdee: "Dual-filter EMA smoothing",
-    },
-    {
-      feature: "Mobile Quick Logging (< 10 seconds)",
-      generic: false,
-      excel: "Clunky on phones",
-      adaptdee: "1-Click fast daily log",
-    },
-    {
-      feature: "1-Click CSV Import / Export",
-      generic: false,
-      excel: "Manual copy/paste",
-      adaptdee: "Full spreadsheet portability",
-    },
-    {
-      feature: "Pricing & Paywalls",
-      generic: "Free (Ad-heavy)",
-      excel: "Free (Labor intensive)",
-      adaptdee: "100% Free & No Ads",
-    },
-  ]
+const rows = [
+  {
+    feature: "Continuous Metabolic Adaptation (EMA)",
+    generic: false,
+    excel: "Manual edits",
+    adaptdee: "Automated real-time engine",
+  },
+  {
+    feature: "Dynamic Weight-Adjusted Formula Baseline",
+    generic: false,
+    excel: false,
+    adaptdee: "Weekly dynamic recalibration",
+  },
+  {
+    feature: "Target Caloric Budget & Deficit Planner",
+    generic: false,
+    excel: "Static formulas",
+    adaptdee: "Custom paces with live ETA",
+  },
+  {
+    feature: "Noise & Water Weight Fluctuations Dampened",
+    generic: false,
+    excel: "Basic averages",
+    adaptdee: "Dual-filter EMA smoothing",
+  },
+  {
+    feature: "Mobile Quick Logging (< 10 seconds)",
+    generic: false,
+    excel: "Clunky on phones",
+    adaptdee: "1-Click fast daily log",
+  },
+  {
+    feature: "1-Click CSV Import / Export",
+    generic: false,
+    excel: "Manual copy/paste",
+    adaptdee: "Full spreadsheet portability",
+  },
+  {
+    feature: "Pricing & Paywalls",
+    generic: "Free (Ad-heavy)",
+    excel: "Free (Labor intensive)",
+    adaptdee: "100% Free & No Ads",
+  },
+]
 
+export default function ComparisonTable() {
   return (
     <section id="comparison" className="relative py-28 px-6 border-t border-white/5 bg-[#0A0A0F] overflow-hidden">
       <div className="max-w-5xl mx-auto relative z-10">
@@ -65,7 +62,7 @@ export default function ComparisonTable() {
           </p>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#0D0D12]/90 backdrop-blur-xl shadow-2xl">
+        <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#0D0D12]/90 backdrop-blur-xl shadow-2xl animate-in-view">
           <table className="w-full text-left border-collapse min-w-[620px]">
             <thead>
               <tr className="border-b border-white/10 bg-white/[0.02]">
